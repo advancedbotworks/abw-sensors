@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation and setup help
+    url: https://docs.advancedbotworks.com
+    about: How to connect and use the sensors, what each channel means, and how to update firmware.
+  - name: Orders, shipping, returns and warranty
+    url: https://docs.advancedbotworks.com/support/
+    about: For anything about an order, email support (include your order number). Please don't post order details here.
+  - name: Shop
+    url: https://advancedbotworks.com
+    about: Advanced Bot Works store.

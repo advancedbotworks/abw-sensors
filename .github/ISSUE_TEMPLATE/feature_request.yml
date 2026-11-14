@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an improvement to a sensor's firmware, the library or the docs.
+title: "[Idea]: "
+labels: ["enhancement", "needs triage"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: What's it about?
+      options:
+        - IR Sensor Ring
+        - Laser Distance Sensor Array
+        - Library / firmware in general
+        - Documentation
+        - A new product idea
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the problem or the use case (e.g. which RoboCup Junior league, what your robot needs).
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+      description: Your suggestion. If it changes what the R/G/B/I channels report, say how.
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Links, sketches, photos, competition rules that apply.
+    validations:
+      required: false

@@ -60,6 +60,10 @@ The Laser Distance Sensor Array firmware also needs Pololu's [VL53L1X](https://g
 * 2.0.0 (2025-03-07): Added LRF Module to the library.
 * 1.0.0 (2024-06-04): Original Release for IR Ring found [here](https://github.com/advancedbotworks/abw-ir-ring) (archived)
 
+## Contributing and support
+
+Found a bug or have an idea? [Open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). See [CONTRIBUTING.md](CONTRIBUTING.md) for pull requests. For orders, shipping or warranty, email support@advancedbotworks.com.
+
 ## Licence
 
 Copyright (C) 2024-2026 Aparaj Bogahawatta.
