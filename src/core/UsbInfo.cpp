@@ -23,12 +23,12 @@
 
 namespace abw {
 
-void printInfoOnUsbConnect(const char* productName) {
+void printInfoOnUsbConnect(const char *productName) {
     static bool started = false;
     static bool wasConnected = false;
 
     if (!started) {
-        Serial.begin(115200);   // USB serial: the baud rate is ignored
+        Serial.begin(115200); // USB serial: the baud rate is ignored
         started = true;
     }
 

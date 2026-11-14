@@ -25,35 +25,35 @@ using namespace abw;
 // ---------------------------------------------------------------------------
 static int g_checks = 0;
 static int g_failures = 0;
-static const char* g_test = "";
+static const char *g_test = "";
 
-#define CHECK(cond)                                                          \
-    do {                                                                     \
-        g_checks++;                                                          \
-        if (!(cond)) {                                                       \
-            g_failures++;                                                    \
+#define CHECK(cond)                                                               \
+    do {                                                                          \
+        g_checks++;                                                               \
+        if (!(cond)) {                                                            \
+            g_failures++;                                                         \
             printf("  FAIL [%s] %s:%d: %s\n", g_test, __FILE__, __LINE__, #cond); \
-        }                                                                    \
+        }                                                                         \
     } while (0)
 
-#define CHECK_MSG(cond, ...)                                                 \
-    do {                                                                     \
-        g_checks++;                                                          \
-        if (!(cond)) {                                                       \
-            g_failures++;                                                    \
+#define CHECK_MSG(cond, ...)                                                        \
+    do {                                                                            \
+        g_checks++;                                                                 \
+        if (!(cond)) {                                                              \
+            g_failures++;                                                           \
             printf("  FAIL [%s] %s:%d: %s -- ", g_test, __FILE__, __LINE__, #cond); \
-            printf(__VA_ARGS__);                                             \
-            printf("\n");                                                    \
-        }                                                                    \
+            printf(__VA_ARGS__);                                                    \
+            printf("\n");                                                           \
+        }                                                                           \
     } while (0)
 
 #define TEST(name) static void name()
-#define RUN(name)                                                            \
-    do {                                                                     \
-        g_test = #name;                                                      \
-        int before = g_failures;                                             \
-        name();                                                              \
-        printf("%s %s\n", g_failures == before ? "PASS" : "FAIL", #name);    \
+#define RUN(name)                                                         \
+    do {                                                                  \
+        g_test = #name;                                                   \
+        int before = g_failures;                                          \
+        name();                                                           \
+        printf("%s %s\n", g_failures == before ? "PASS" : "FAIL", #name); \
     } while (0)
 
 // ---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ static float angleError(float a, float b) {
 }
 
 // Deterministic pseudo-random noise in [-amp, amp].
-static float noise(unsigned& seed, float amp) {
+static float noise(unsigned &seed, float amp) {
     seed = seed * 1103515245u + 12345u;
     return amp * (((seed >> 16) & 0x7FFF) / 16383.5f - 1.0f);
 }
@@ -103,15 +103,16 @@ TEST(count_to_strength_normalises_by_duty) {
 }
 
 TEST(count_to_strength_clamps_and_guards) {
-    CHECK(irCountToStrength(500, 500, 0.24f) == 100.0f);   // above the ceiling
-    CHECK(irCountToStrength(100, 0, 0.24f) == 0.0f);       // no samples
-    CHECK(irCountToStrength(100, 500, 0.0f) == 0.0f);      // bad calibration
+    CHECK(irCountToStrength(500, 500, 0.24f) == 100.0f); // above the ceiling
+    CHECK(irCountToStrength(100, 0, 0.24f) == 0.0f);     // no samples
+    CHECK(irCountToStrength(100, 500, 0.0f) == 0.0f);    // bad calibration
 }
 
 TEST(smoothing_converges_and_alpha_one_passes_through) {
     CHECK(irSmooth(10.0f, 50.0f, 1.0f) == 50.0f);
     float v = 0.0f;
-    for (int i = 0; i < 50; i++) v = irSmooth(v, 80.0f, 0.4f);
+    for (int i = 0; i < 50; i++)
+        v = irSmooth(v, 80.0f, 0.4f);
     CHECK(fabsf(v - 80.0f) < 0.01f);
     // One step at alpha 0.4 moves 40% of the way.
     CHECK(fabsf(irSmooth(0.0f, 100.0f, 0.4f) - 40.0f) < 0.001f);
@@ -131,7 +132,7 @@ TEST(no_ball_when_all_zero) {
 
 TEST(no_ball_below_threshold) {
     float v[N];
-    simulateBall(v, 90.0f, 2.5f);   // very weak: below the 3% threshold
+    simulateBall(v, 90.0f, 2.5f); // very weak: below the 3% threshold
     IRRingOutputs o = irCalculateOutputs(v, defaults());
     CHECK(!o.ballDetected);
     CHECK(o.directionAdvanced == 450);
@@ -247,7 +248,7 @@ TEST(position_to_degrees_wraps) {
     CHECK(irPositionToDegrees(3.0f) == 90);
     CHECK(irPositionToDegrees(-1.0f) == 330);
     CHECK(irPositionToDegrees(12.0f) == 0);
-    CHECK(irPositionToDegrees(11.999f) == 0);   // rounds to 360 -> 0
+    CHECK(irPositionToDegrees(11.999f) == 0); // rounds to 360 -> 0
     CHECK(irPositionToDegrees(25.0f) == 30);
 }
 
@@ -265,7 +266,7 @@ TEST(cancelling_vectors_fall_back_to_strongest) {
     v[8] = 60.0f;
     IRRingOutputs o = irCalculateOutputs(v, defaults(IR_DIRECTION_VECTOR_SUM, 6));
     CHECK(o.ballDetected);
-    CHECK_MSG(o.directionAdvanced == 60, "-> %d", o.directionAdvanced);   // receiver 2 = 60 deg
+    CHECK_MSG(o.directionAdvanced == 60, "-> %d", o.directionAdvanced); // receiver 2 = 60 deg
 }
 
 TEST(limited_span_ignores_far_side_reflection) {
@@ -273,7 +274,8 @@ TEST(limited_span_ignores_far_side_reflection) {
     float v[N], reflection[N];
     simulateBall(v, 90.0f, 100.0f);
     simulateBall(reflection, 270.0f, 40.0f);
-    for (int i = 0; i < N; i++) v[i] += reflection[i];
+    for (int i = 0; i < N; i++)
+        v[i] += reflection[i];
 
     float e2 = angleError(irCalculateOutputs(v, defaults(IR_DIRECTION_VECTOR_SUM, 2)).directionAdvanced, 90.0f);
     CHECK_MSG(e2 <= 1.0f, "span 2 error %.1f", e2);
@@ -281,7 +283,8 @@ TEST(limited_span_ignores_far_side_reflection) {
     // Reflection at 150 deg (60 deg away): whole ring is pulled, span 2 less so.
     simulateBall(v, 90.0f, 100.0f);
     simulateBall(reflection, 210.0f, 50.0f);
-    for (int i = 0; i < N; i++) v[i] += reflection[i];
+    for (int i = 0; i < N; i++)
+        v[i] += reflection[i];
     float span2 = angleError(irCalculateOutputs(v, defaults(IR_DIRECTION_VECTOR_SUM, 2)).directionAdvanced, 90.0f);
     float span6 = angleError(irCalculateOutputs(v, defaults(IR_DIRECTION_VECTOR_SUM, 6)).directionAdvanced, 90.0f);
     CHECK_MSG(span2 <= span6, "span2 %.1f vs span6 %.1f", span2, span6);
@@ -295,7 +298,7 @@ TEST(noise_keeps_angle_close) {
         float v[N];
         simulateBall(v, deg, 60.0f);
         for (int i = 0; i < N; i++) {
-            v[i] += noise(seed, 2.0f);      // +/-2 strength units of noise
+            v[i] += noise(seed, 2.0f); // +/-2 strength units of noise
             if (v[i] < 0.0f) v[i] = 0.0f;
         }
         float e = angleError(irCalculateOutputs(v, defaults()).directionAdvanced, deg);
@@ -312,7 +315,7 @@ TEST(strength_is_three_receiver_average) {
     v[4] = 90.0f;
     v[3] = 30.0f;
     v[5] = 60.0f;
-    v[10] = 80.0f;   // far-side value must not count
+    v[10] = 80.0f; // far-side value must not count
     CHECK(fabsf(irStrength(v, irStrongest(v), 100.0f) - 60.0f) < 0.01f);
     CHECK(irCalculateOutputs(v, defaults()).strength == 60);
 }
@@ -348,9 +351,9 @@ TEST(strength_scaling_and_clamp) {
     float v[N] = {0};
     v[6] = 60.0f;
     v[5] = 30.0f;
-    v[7] = 30.0f;   // average 40
-    CHECK(fabsf(irStrength(v, 6, 50.0f) - 80.0f) < 0.01f);   // 40 / 50 -> 80
-    CHECK(irStrength(v, 6, 20.0f) == 100.0f);                 // clamped
+    v[7] = 30.0f;                                          // average 40
+    CHECK(fabsf(irStrength(v, 6, 50.0f) - 80.0f) < 0.01f); // 40 / 50 -> 80
+    CHECK(irStrength(v, 6, 20.0f) == 100.0f);              // clamped
     IRRingSettings s = defaults();
     s.strengthMax = 50.0f;
     CHECK(irCalculateOutputs(v, s).strength == 80);

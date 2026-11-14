@@ -42,7 +42,7 @@ uint8_t wrapIndex(int index) {
 
 float clamp100(float value) {
     if (value > 100.0f) return 100.0f;
-    if (value < 0.0f)   return 0.0f;
+    if (value < 0.0f) return 0.0f;
     return value;
 }
 
@@ -74,7 +74,8 @@ float irStrength(const float values[ABW_IR_SENSOR_COUNT], uint8_t best, float st
     // When the ball sits between two receivers one drops and the other rises,
     // so this average stays steady where the single maximum would dip.
     const float average = (values[wrapIndex(best - 1)] + values[best] +
-                           values[wrapIndex(best + 1)]) / 3.0f;
+                           values[wrapIndex(best + 1)]) /
+                          3.0f;
     if (strengthMax <= 0.0f) {
         return clamp100(average);
     }
@@ -125,8 +126,10 @@ float irPositionInterpolation(const float values[ABW_IR_SENSOR_COUNT], uint8_t b
 }
 
 uint16_t irPositionToDegrees(float position) {
-    while (position < 0.0f)            position += kCount;
-    while (position >= (float)kCount)  position -= kCount;
+    while (position < 0.0f)
+        position += kCount;
+    while (position >= (float)kCount)
+        position -= kCount;
 
     uint16_t degrees = (uint16_t)(position * kDegreesPerReceiver + 0.5f);
     if (degrees >= 360) degrees -= 360;
@@ -134,7 +137,7 @@ uint16_t irPositionToDegrees(float position) {
 }
 
 IRRingOutputs irCalculateOutputs(const float values[ABW_IR_SENSOR_COUNT],
-                                 const IRRingSettings& settings) {
+                                 const IRRingSettings &settings) {
     IRRingOutputs out;
 
     const uint8_t best = irStrongest(values);

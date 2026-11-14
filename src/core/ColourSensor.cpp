@@ -32,20 +32,20 @@ static_assert(ABW_VERSION_MAJOR <= 9 && ABW_VERSION_MINOR <= 9 && ABW_VERSION_PA
 /**
  * @brief Default constructor
  */
-ColourSensor::ColourSensor(){
+ColourSensor::ColourSensor() {
     m_defaultIntVal = new uint8_t(0);
-    uint16_t defaultRGB[3]      = { 0, 0, 0 };
-    uint16_t defaultHSV[3]      = { 0, 0, 0 };
-    uint8_t  LEDBrightnesses[3] = { 0, 0, 0 };
+    uint16_t defaultRGB[3] = {0, 0, 0};
+    uint16_t defaultHSV[3] = {0, 0, 0};
+    uint8_t LEDBrightnesses[3] = {0, 0, 0};
 
     // Sensor default values
-    m_sensorColor              = m_defaultIntVal;
-    m_reflectedLight           = m_defaultIntVal;
-    m_ambientLight             = m_defaultIntVal;
-    m_sensorRGB_I              = defaultRGB;
-    m_sensorHSV                = defaultHSV;
-    m_LEDBrightnesses          = LEDBrightnesses;
-    m_pLEDBrightnessesfunc     = nullptr;
+    m_sensorColor = m_defaultIntVal;
+    m_reflectedLight = m_defaultIntVal;
+    m_ambientLight = m_defaultIntVal;
+    m_sensorRGB_I = defaultRGB;
+    m_sensorHSV = defaultHSV;
+    m_LEDBrightnesses = LEDBrightnesses;
+    m_pLEDBrightnessesfunc = nullptr;
     m_defaultComboModesEnabled = false;
 }
 
@@ -57,20 +57,20 @@ ColourSensor::ColourSensor(){
  * @param pRGB_I Pointer to Raw values of Red Green Blue channels. See m_sensorRGB_I.
  * @param pHSV Pointer to Raw values of Hue, Saturation, Value/Brightness channels. See m_sensorHSV.
  */
-ColourSensor::ColourSensor(uint8_t *pSensorColor, uint16_t *pRGB_I, uint16_t *pHSV){
+ColourSensor::ColourSensor(uint8_t *pSensorColor, uint16_t *pRGB_I, uint16_t *pHSV) {
     m_defaultIntVal = new uint8_t(0);
-    uint8_t LEDBrightnesses[3] = { 0, 0, 0 };
+    uint8_t LEDBrightnesses[3] = {0, 0, 0};
 
     // Set given values
     m_sensorColor = pSensorColor;
     m_sensorRGB_I = pRGB_I;
-    m_sensorHSV   = pHSV;
+    m_sensorHSV = pHSV;
 
     // Sensor default values
-    m_reflectedLight           = m_defaultIntVal;
-    m_ambientLight             = m_defaultIntVal;
-    m_LEDBrightnesses          = LEDBrightnesses;
-    m_pLEDBrightnessesfunc     = nullptr;
+    m_reflectedLight = m_defaultIntVal;
+    m_ambientLight = m_defaultIntVal;
+    m_LEDBrightnesses = LEDBrightnesses;
+    m_pLEDBrightnessesfunc = nullptr;
     m_defaultComboModesEnabled = false;
 }
 
@@ -78,7 +78,7 @@ ColourSensor::ColourSensor(uint8_t *pSensorColor, uint16_t *pRGB_I, uint16_t *pH
 /**
  * @brief Destructor
  */
-ColourSensor::~ColourSensor(){
+ColourSensor::~ColourSensor() {
     delete m_defaultIntVal;
     // TODO: Should also implement copy constructor or copy assignment operator
 }
@@ -90,7 +90,7 @@ ColourSensor::~ColourSensor(){
  *      TODO: We use an array of size 3 (4th channel is unknown).
  *      Continuous values 0..1023.
  */
-void ColourSensor::setSensorRGB_I(uint16_t *pData){
+void ColourSensor::setSensorRGB_I(uint16_t *pData) {
     this->m_sensorRGB_I = pData;
 }
 
@@ -100,7 +100,7 @@ void ColourSensor::setSensorRGB_I(uint16_t *pData){
  * @param pData Expected value pointed is an array of uint16_t size 3.
  *      Continuous values 0..1023.
  */
-void ColourSensor::setSensorHSV(uint16_t *pData){
+void ColourSensor::setSensorHSV(uint16_t *pData) {
     this->m_sensorHSV = pData;
 }
 
@@ -112,7 +112,7 @@ void ColourSensor::setSensorHSV(uint16_t *pData){
  *      COLOR_NONE, COLOR_BLACK, COLOR_BLUE, COLOR_LIGHTBLUE, COLOR_GREEN,
  *      COLOR_YELLOW, COLOR_RED, COLOR_PURPLE, COLOR_WHITE.
  */
-void ColourSensor::setSensorColor(uint8_t *pData){
+void ColourSensor::setSensorColor(uint8_t *pData) {
     // Free constructor's value
     this->m_sensorColor = pData;
 }
@@ -121,7 +121,7 @@ void ColourSensor::setSensorColor(uint8_t *pData){
 /**
  * @brief Set callback receiving m_LEDBrightnesses when modified by the hub.
  */
-void ColourSensor::setLEDBrightnessesCallback(void(pfunc)(const uint8_t*)){
+void ColourSensor::setLEDBrightnessesCallback(void(pfunc)(const uint8_t *)) {
     this->m_pLEDBrightnessesfunc = pfunc;
 }
 
@@ -131,7 +131,7 @@ void ColourSensor::setLEDBrightnessesCallback(void(pfunc)(const uint8_t*)){
  * @param pData Pointer to reflected light (from clear channel value or
  *      calculations based on rgb channels). Continuous values 0..100.
  */
-void ColourSensor::setSensorReflectedLight(uint8_t *pData){
+void ColourSensor::setSensorReflectedLight(uint8_t *pData) {
     this->m_reflectedLight = pData;
 }
 
@@ -141,7 +141,7 @@ void ColourSensor::setSensorReflectedLight(uint8_t *pData){
  * @param pData Pointer to ambient light based on lux value.
  *      Continuous values 0..100.
  */
-void ColourSensor::setSensorAmbientLight(uint8_t *pData){
+void ColourSensor::setSensorAmbientLight(uint8_t *pData) {
     this->m_ambientLight = pData;
 }
 
@@ -150,16 +150,16 @@ void ColourSensor::setSensorAmbientLight(uint8_t *pData){
  * @brief Send initialization sequences for the current sensor.
  * @see https://github.com/pybricks/pybricks-micropython/lib/pbio/test/src/uartdev.
  */
-void ColourSensor::commSendInitSequence(){
+void ColourSensor::commSendInitSequence() {
     // TODO: put all this strings into flash via PROGMEM
     // Initialize uart
     // delay(5000);
     Serial1.begin(2400);
     delay(100);
 
-    Serial1.write("\x40\x3D\x82", 3);                              // Type ID: 0x3D
-    Serial1.write("\x51\x07\x07\x09\x00\xA7", 6);                  // CMD_MODES: 8 modes, 8 views, Ext. Modes: 10 modes, 1 view
-    Serial1.write("\x52\x00\xC2\x01\x00\x6E", 6);                  // CMD_SPEED: 115200
+    Serial1.write("\x40\x3D\x82", 3);             // Type ID: 0x3D
+    Serial1.write("\x51\x07\x07\x09\x00\xA7", 6); // CMD_MODES: 8 modes, 8 views, Ext. Modes: 10 modes, 1 view
+    Serial1.write("\x52\x00\xC2\x01\x00\x6E", 6); // CMD_SPEED: 115200
     // CMD_VERSION: firmware = library version (ABW_VERSION), hardware = ABW_HARDWARE_VERSION.
     // (Previously hard-coded as fw 1.0.0.0, hw 1.0.0.0.)
     uint8_t versionMsg[abw::kLegoVersionMessageSize];
@@ -293,35 +293,35 @@ void ColourSensor::handleModes() {
     unsigned char header;
     unsigned char mode;
     header = Serial1.read();
-    
-    #if DEBUG_COMMS
-        Serial.print("<\tHeader ");
-        Serial.println(header, HEX);
-    #endif
+
+#if DEBUG_COMMS
+    Serial.print("<\tHeader ");
+    Serial.println(header, HEX);
+#endif
 
     if (header == 0x02) { // NACK
         m_lastAckTick = millis();
         // Note: In theory the default mode is always the lowest (0).
         // If combos mode is enabled, prefer to send this data
-        // if (m_defaultComboModesEnabled) 
-            this->defaultCombosMode();
+        // if (m_defaultComboModesEnabled)
+        this->defaultCombosMode();
         // else
-            // this->sensorColorMode();
+        // this->sensorColorMode();
     } else if (header == 0x43) {
         // "Get value" commands (3 bytes message: header, mode, checksum)
         size_t ret = Serial1.readBytes(m_rxBuf, 2);
         if (ret < 2) {
-            // check if all expected bytes are received without timeout
-            #if DEBUG_COMMS
-                Serial.print("incomplete 0x43 message");
-            #endif
+// check if all expected bytes are received without timeout
+#if DEBUG_COMMS
+            Serial.print("incomplete 0x43 message");
+#endif
             return;
         }
         mode = m_rxBuf[0];
-        #if DEBUG_COMMS
-            Serial.print("<\tAsked mode ");
-            Serial.println(mode);
-        #endif
+#if DEBUG_COMMS
+        Serial.print("<\tAsked mode ");
+        Serial.println(mode);
+#endif
 
         this->m_currentExtMode = (mode < 8) ? EXT_MODE_0 : EXT_MODE_8;
 
@@ -345,10 +345,10 @@ void ColourSensor::handleModes() {
                 this->sensorHSVMode();
                 break;
             default:
-                #if DEBUG_COMMS
-                    Serial.print("unknown R mode: ");
-                    Serial.println(mode, HEX);
-                #endif
+#if DEBUG_COMMS
+                Serial.print("unknown R mode: ");
+                Serial.println(mode, HEX);
+#endif
                 break;
         }
     } else if (header == 0x46) {
@@ -376,15 +376,15 @@ void ColourSensor::handleModes() {
         if (_(signed)(ret) != msg_size - 1)
             return;
 
-        switch(mode) {
+        switch (mode) {
             case ColourSensor::PBIO_IODEV_MODE_PUP_COLOR_SENSOR__LIGHT:
                 this->setLEDBrightnessesMode();
                 break;
             default:
-                #if DEBUG_COMMS
-                    Serial.print("unknown W mode: ");
-                    Serial.println(mode, HEX);
-                #endif
+#if DEBUG_COMMS
+                Serial.print("unknown W mode: ");
+                Serial.println(mode, HEX);
+#endif
                 break;
         }
     } else if (header == 0x4C) {
@@ -419,10 +419,10 @@ void ColourSensor::handleModes() {
         // Get data (10 bytes message)
         size_t ret = Serial1.readBytes(m_rxBuf, 9);
         if (ret < 9) {
-            // check if all expected bytes are received without timeout
-            #if DEBUG_COMMS
-                Serial.println("incomplete 0x5C message");
-            #endif
+// check if all expected bytes are received without timeout
+#if DEBUG_COMMS
+            Serial.println("incomplete 0x5C message");
+#endif
             return;
         }
 
@@ -442,10 +442,10 @@ void ColourSensor::handleModes() {
  *      Should be used as a first response after a NACK, and before every responses for
  *      modes >= 8.
  */
-void ColourSensor::extendedModeInfoResponse(){
+void ColourSensor::extendedModeInfoResponse() {
     // extended mode info
-    m_txBuf[0] = 0x46;                      // header type LUMP_MSG_TYPE_CMD, cmd LUMP_CMD_EXT_MODE, size 3
-    m_txBuf[1] = this->m_currentExtMode;    // current EXT_MODE
+    m_txBuf[0] = 0x46;                   // header type LUMP_MSG_TYPE_CMD, cmd LUMP_CMD_EXT_MODE, size 3
+    m_txBuf[1] = this->m_currentExtMode; // current EXT_MODE
     sendUARTBuffer(1);
 }
 
@@ -462,14 +462,14 @@ void ColourSensor::setLEDBrightnessesMode() {
     this->m_LEDBrightnesses[1] = m_rxBuf[1];
     this->m_LEDBrightnesses[2] = m_rxBuf[2];
 
-    #if DEBUG_COMMS
-        Serial.print("LEDBrightnesses set (Left,Bottom,Right): ");
-        Serial.print(this->m_LEDBrightnesses[0], HEX);
-        Serial.print(", ");
-        Serial.print(this->m_LEDBrightnesses[1], HEX);
-        Serial.print(", ");
-        Serial.println(this->m_LEDBrightnesses[2], HEX);
-    #endif
+#if DEBUG_COMMS
+    Serial.print("LEDBrightnesses set (Left,Bottom,Right): ");
+    Serial.print(this->m_LEDBrightnesses[0], HEX);
+    Serial.print(", ");
+    Serial.print(this->m_LEDBrightnesses[1], HEX);
+    Serial.print(", ");
+    Serial.println(this->m_LEDBrightnesses[2], HEX);
+#endif
 
     if (this->m_pLEDBrightnessesfunc != nullptr)
         this->m_pLEDBrightnessesfunc(this->m_LEDBrightnesses);
@@ -483,10 +483,10 @@ void ColourSensor::setLEDBrightnessesMode() {
  *      COLOR_YELLOW, COLOR_RED, COLOR_PURPLE, COLOR_WHITE.
  *      See m_sensorColor.
  */
-void ColourSensor::sensorColorMode(){
+void ColourSensor::sensorColorMode() {
     // Mode 0
-    m_txBuf[0] = 0xC0;                      // header
-    m_txBuf[1] = *m_sensorColor;            // current detected color
+    m_txBuf[0] = 0xC0;           // header
+    m_txBuf[1] = *m_sensorColor; // current detected color
     sendUARTBuffer(1);
 }
 
@@ -495,10 +495,10 @@ void ColourSensor::sensorColorMode(){
  * @brief Mode 1 response (read): Send reflected light measure.
  *      See m_reflectedLight.
  */
-void ColourSensor::sensorReflectedLightMode(){
+void ColourSensor::sensorReflectedLightMode() {
     // Mode 1
-    m_txBuf[0] = 0xC1;                      // header
-    m_txBuf[1] = *this->m_reflectedLight;   // 0..100
+    m_txBuf[0] = 0xC1;                    // header
+    m_txBuf[1] = *this->m_reflectedLight; // 0..100
     sendUARTBuffer(1);
 }
 
@@ -507,9 +507,9 @@ void ColourSensor::sensorReflectedLightMode(){
  * @brief Mode 2 response (read): Send lux measure.
  *      See m_ambientLight.
  */
-void ColourSensor::sensorAmbientLight(){
+void ColourSensor::sensorAmbientLight() {
     // Mode 2
-    m_txBuf[0] = 0xC2;                      // header
+    m_txBuf[0] = 0xC2; // header
     m_txBuf[1] = *this->m_ambientLight;
     sendUARTBuffer(1);
 }
@@ -520,17 +520,17 @@ void ColourSensor::sensorAmbientLight(){
  * @warning The message should be size 6, but for constraints reasons due to masks,
  *      we must stick to a size of 10 bytes.
  */
-void ColourSensor::sensorRGB_IMode(){
+void ColourSensor::sensorRGB_IMode() {
     // Mode 5
     m_txBuf[0] = getHeader(lump_msg_type_t::LUMP_MSG_TYPE_DATA, 5, 10); // 0xdd
     m_txBuf[1] = this->m_sensorRGB_I[0] & 0xFF;                         // Send LSB of red value
     m_txBuf[2] = (this->m_sensorRGB_I[0] >> 8) & 0xFF;                  // Send MSB
     m_txBuf[3] = this->m_sensorRGB_I[1] & 0xFF;                         // Send LSB of green value
     m_txBuf[4] = (this->m_sensorRGB_I[1] >> 8) & 0xFF;
-    m_txBuf[5] = this->m_sensorRGB_I[2] & 0xFF;                         // Send LSB of blue value
+    m_txBuf[5] = this->m_sensorRGB_I[2] & 0xFF; // Send LSB of blue value
     m_txBuf[6] = (this->m_sensorRGB_I[2] >> 8) & 0xFF;
-    m_txBuf[7] = 0;                                                     // Unknown channel
-    m_txBuf[8] = 0;                                                     // Unknown channel
+    m_txBuf[7] = 0; // Unknown channel
+    m_txBuf[8] = 0; // Unknown channel
     sendUARTBuffer(8);
 }
 
@@ -539,12 +539,12 @@ void ColourSensor::sensorRGB_IMode(){
  * @brief Mode 6 response (read): Send HSV array.
  *
  */
-void ColourSensor::sensorHSVMode(){
-    // Mode 6
-    // Send data; payload size = 6, but total msg_size = 10
-    #if DEBUG_COMMS
-        Serial.println("Mode 6");
-    #endif
+void ColourSensor::sensorHSVMode() {
+// Mode 6
+// Send data; payload size = 6, but total msg_size = 10
+#if DEBUG_COMMS
+    Serial.println("Mode 6");
+#endif
 
     // Send data
     m_txBuf[0] = getHeader(lump_msg_type_t::LUMP_MSG_TYPE_DATA, 6, 10); // header: 0xde
@@ -552,10 +552,10 @@ void ColourSensor::sensorHSVMode(){
     m_txBuf[2] = (this->m_sensorHSV[0] >> 8) & 0xFF;                    // Send MSB
     m_txBuf[3] = this->m_sensorHSV[1] & 0xFF;                           // Send LSB of saturation value
     m_txBuf[4] = (this->m_sensorHSV[1] >> 8) & 0xFF;
-    m_txBuf[5] = this->m_sensorHSV[2] & 0xFF;                           // Send LSB of value
+    m_txBuf[5] = this->m_sensorHSV[2] & 0xFF; // Send LSB of value
     m_txBuf[6] = (this->m_sensorHSV[2] >> 8) & 0xFF;
-    m_txBuf[7] = 0;                                                     // Padding
-    m_txBuf[8] = 0;                                                     // Padding
+    m_txBuf[7] = 0; // Padding
+    m_txBuf[8] = 0; // Padding
     sendUARTBuffer(8);
 }
 
@@ -567,7 +567,7 @@ void ColourSensor::sensorHSVMode(){
  *      Here is a custom implementation for debugging purposes.
  *      We basically send all responses to all modes.
  */
-void ColourSensor::sensorDebugMode(){
+void ColourSensor::sensorDebugMode() {
     // Mode 8 - Test mode
     // extended mode info
     // We are in EXT_MODE_8 because of the Mode 8 command
@@ -610,11 +610,11 @@ void ColourSensor::sensorDebugMode(){
  * @todo Parse dynamically the received packet. Have a struct that could map
  *      mode ids and values for an easier access.
  */
-void ColourSensor::defaultCombosMode(){
-    // Send data; payload size = 8, but total msg_size = 10
-    #if DEBUG_COMMS
-        Serial.println("Default combos mode");
-    #endif
+void ColourSensor::defaultCombosMode() {
+// Send data; payload size = 8, but total msg_size = 10
+#if DEBUG_COMMS
+    Serial.println("Default combos mode");
+#endif
     // Send data
     m_txBuf[0] = getHeader(lump_msg_type_t::LUMP_MSG_TYPE_DATA, 0, 10); // header: 0xd8
     m_txBuf[1] = *this->m_reflectedLight;                               // mode 1 value 0
@@ -624,7 +624,7 @@ void ColourSensor::defaultCombosMode(){
     m_txBuf[4] = (this->m_sensorRGB_I[0] >> 8) & 0xFF;                  // Send MSB
     m_txBuf[5] = this->m_sensorRGB_I[1] & 0xFF;                         // Send LSB of green value
     m_txBuf[6] = (this->m_sensorRGB_I[1] >> 8) & 0xFF;
-    m_txBuf[7] = this->m_sensorRGB_I[2] & 0xFF;                         // Send LSB of blue value
+    m_txBuf[7] = this->m_sensorRGB_I[2] & 0xFF; // Send LSB of blue value
     m_txBuf[8] = (this->m_sensorRGB_I[2] >> 8) & 0xFF;
     sendUARTBuffer(8);
 }
@@ -633,7 +633,7 @@ void ColourSensor::defaultCombosMode(){
 /**
  * @brief Response to a reset combo mode query.
  */
-void ColourSensor::ackResetCombosMode(){
+void ColourSensor::ackResetCombosMode() {
     m_txBuf[0] = 0x44;
     m_txBuf[1] = 0x20;
     sendUARTBuffer(1);
@@ -645,7 +645,7 @@ void ColourSensor::ackResetCombosMode(){
  *      It's the same package as the one received.
  * @todo Replay the received packet instead manually setting it.
  */
-void ColourSensor::ackSetCombosMode(){
+void ColourSensor::ackSetCombosMode() {
     m_txBuf[0] = 0x5C;
     m_txBuf[1] = 0x25;
     m_txBuf[2] = 0x00;

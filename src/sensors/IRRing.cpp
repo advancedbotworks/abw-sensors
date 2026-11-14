@@ -32,8 +32,8 @@ const uint8_t kPins[ABW_IR_SENSOR_COUNT] = {17, 14, 20, 2, 10, 9, 8, 3, 6, 21, 1
 // mask. init() checks these against the board's pin table.
 //   receiver:   1     2     3     4     5     6     7     8     9    10    11    12
 //   pin:      PA10  PA02  PA09  PB10  PA21  PA20  PA18  PB11  PA04  PB03  PB02  PB08
-const uint8_t kPortGroup[ABW_IR_SENSOR_COUNT] = { 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1};
-const uint8_t kPortBit[ABW_IR_SENSOR_COUNT]   = {10, 2, 9,10,21,20,18,11, 4, 3, 2, 8};
+const uint8_t kPortGroup[ABW_IR_SENSOR_COUNT] = {0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1};
+const uint8_t kPortBit[ABW_IR_SENSOR_COUNT] = {10, 2, 9, 10, 21, 20, 18, 11, 4, 3, 2, 8};
 
 bool s_pinMapOk = false;
 
@@ -46,17 +46,22 @@ volatile bool s_windowReady = false;
 void startSampleTimer() {
     // Clock TC3 from GCLK0 (48 MHz).
     GCLK->CLKCTRL.reg = GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID_TCC2_TC3;
-    while (GCLK->STATUS.bit.SYNCBUSY);
+    while (GCLK->STATUS.bit.SYNCBUSY)
+        ;
 
     TC3->COUNT16.CTRLA.reg = TC_CTRLA_SWRST;
-    while (TC3->COUNT16.STATUS.bit.SYNCBUSY);
-    while (TC3->COUNT16.CTRLA.bit.SWRST);
+    while (TC3->COUNT16.STATUS.bit.SYNCBUSY)
+        ;
+    while (TC3->COUNT16.CTRLA.bit.SWRST)
+        ;
 
     // 16-bit counter, reset on match with CC0 ("match frequency" mode), no prescaler.
     TC3->COUNT16.CTRLA.reg = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV1;
-    while (TC3->COUNT16.STATUS.bit.SYNCBUSY);
+    while (TC3->COUNT16.STATUS.bit.SYNCBUSY)
+        ;
     TC3->COUNT16.CC[0].reg = (uint16_t)((F_CPU / 1000000UL) * ABW_IR_SAMPLE_PERIOD_US - 1);
-    while (TC3->COUNT16.STATUS.bit.SYNCBUSY);
+    while (TC3->COUNT16.STATUS.bit.SYNCBUSY)
+        ;
 
     TC3->COUNT16.INTENSET.reg = TC_INTENSET_MC0;
     // Priority 1: above SysTick (2) and the hub UART/SERCOM (3), so samples are
@@ -66,13 +71,14 @@ void startSampleTimer() {
     NVIC_EnableIRQ(TC3_IRQn);
 
     TC3->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
-    while (TC3->COUNT16.STATUS.bit.SYNCBUSY);
+    while (TC3->COUNT16.STATUS.bit.SYNCBUSY)
+        ;
 }
 
 } // namespace
 
 extern "C" void TC3_Handler(void) {
-    TC3->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;   // clear the interrupt
+    TC3->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0; // clear the interrupt
     IRRing::sampleFromISR();
 }
 
@@ -83,18 +89,18 @@ void IRRing::sampleFromISR() {
     const uint32_t lowB = ~PORT->Group[1].IN.reg;
 
     // Unrolled with constant masks (must match kPortGroup / kPortBit).
-    s_accumulators[0]  += (lowA >> 10) & 1U;   // receiver 1,  PA10
-    s_accumulators[1]  += (lowA >> 2)  & 1U;   // receiver 2,  PA02
-    s_accumulators[2]  += (lowA >> 9)  & 1U;   // receiver 3,  PA09
-    s_accumulators[3]  += (lowB >> 10) & 1U;   // receiver 4,  PB10
-    s_accumulators[4]  += (lowA >> 21) & 1U;   // receiver 5,  PA21
-    s_accumulators[5]  += (lowA >> 20) & 1U;   // receiver 6,  PA20
-    s_accumulators[6]  += (lowA >> 18) & 1U;   // receiver 7,  PA18
-    s_accumulators[7]  += (lowB >> 11) & 1U;   // receiver 8,  PB11
-    s_accumulators[8]  += (lowA >> 4)  & 1U;   // receiver 9,  PA04
-    s_accumulators[9]  += (lowB >> 3)  & 1U;   // receiver 10, PB03
-    s_accumulators[10] += (lowB >> 2)  & 1U;   // receiver 11, PB02
-    s_accumulators[11] += (lowB >> 8)  & 1U;   // receiver 12, PB08
+    s_accumulators[0] += (lowA >> 10) & 1U; // receiver 1,  PA10
+    s_accumulators[1] += (lowA >> 2) & 1U;  // receiver 2,  PA02
+    s_accumulators[2] += (lowA >> 9) & 1U;  // receiver 3,  PA09
+    s_accumulators[3] += (lowB >> 10) & 1U; // receiver 4,  PB10
+    s_accumulators[4] += (lowA >> 21) & 1U; // receiver 5,  PA21
+    s_accumulators[5] += (lowA >> 20) & 1U; // receiver 6,  PA20
+    s_accumulators[6] += (lowA >> 18) & 1U; // receiver 7,  PA18
+    s_accumulators[7] += (lowB >> 11) & 1U; // receiver 8,  PB11
+    s_accumulators[8] += (lowA >> 4) & 1U;  // receiver 9,  PA04
+    s_accumulators[9] += (lowB >> 3) & 1U;  // receiver 10, PB03
+    s_accumulators[10] += (lowB >> 2) & 1U; // receiver 11, PB02
+    s_accumulators[11] += (lowB >> 8) & 1U; // receiver 12, PB08
 
     if (++s_sampleCount >= ABW_IR_SAMPLES_PER_WINDOW) {
         // End of window: latch and reset together, so update() never sees a
@@ -120,7 +126,7 @@ void IRRing::init() {
     s_pinMapOk = true;
     for (uint8_t i = 0; i < ABW_IR_SENSOR_COUNT; i++) {
         if ((uint8_t)g_APinDescription[kPins[i]].ulPort != kPortGroup[i] ||
-            (uint8_t)g_APinDescription[kPins[i]].ulPin  != kPortBit[i]) {
+            (uint8_t)g_APinDescription[kPins[i]].ulPin != kPortBit[i]) {
             s_pinMapOk = false;
         }
     }
@@ -168,10 +174,10 @@ void IRRing::calculateOutputs() {
     m_directionAdvanced = m_ballDetected ? out.directionAdvanced : ABW_IR_NO_BALL_ANGLE;
 }
 
-uint8_t IRRing::getDirectionSimple()    { return m_directionSimple; }
-uint8_t IRRing::getStrength()           { return m_strength; }
+uint8_t IRRing::getDirectionSimple() { return m_directionSimple; }
+uint8_t IRRing::getStrength() { return m_strength; }
 uint16_t IRRing::getDirectionAdvanced() { return m_directionAdvanced; }
-bool IRRing::isBallDetected()           { return m_ballDetected; }
+bool IRRing::isBallDetected() { return m_ballDetected; }
 
 void IRRing::setDutyMax(float dutyMax) {
     if (dutyMax > 0.0f) m_dutyMax = dutyMax;

@@ -26,18 +26,16 @@
  */
 #include "BaseSensor.h"
 
-BaseSensor::BaseSensor() :
-    m_connSerialRX_pin(0),
-    m_connSerialTX_pin(1),
-    m_lastAckTick(0),
-    m_connected(false)
-{}
+BaseSensor::BaseSensor() : m_connSerialRX_pin(0),
+                           m_connSerialTX_pin(1),
+                           m_lastAckTick(0),
+                           m_connected(false) {}
 
 /**
  * @brief Get status of connection with the hub.
  * @return bool
  */
-bool BaseSensor::isConnected(){
+bool BaseSensor::isConnected() {
     return m_connected;
 }
 
@@ -48,11 +46,11 @@ bool BaseSensor::isConnected(){
  * @param length Length of the payload (size WITHOUT header & checksum)
  * @return Checksum byte
  */
-uint8_t BaseSensor::calcChecksum(uint8_t *pData, int length){
+uint8_t BaseSensor::calcChecksum(uint8_t *pData, int length) {
     uint8_t lRet, i;
 
     lRet = 0xFF;
-    for(i=0; i<=length; i++){
+    for (i = 0; i <= length; i++) {
         lRet ^= pData[i];
     }
     return lRet;
@@ -63,7 +61,7 @@ uint8_t BaseSensor::calcChecksum(uint8_t *pData, int length){
  * @brief Wait until the hub is available on the serial RX line.
  *      Then, assert the TX line.
  */
-void BaseSensor::commWaitForHubIdle(){
+void BaseSensor::commWaitForHubIdle() {
     // Disable uart: manual control TX and RX pins
     Serial1.end();
 
@@ -137,7 +135,7 @@ void BaseSensor::connectToHub() {
  *      This function is declared as virtual because connectToHub uses it
  *      and must use the derived method, sepcific of a sensor.
  */
-void BaseSensor::commSendInitSequence(){}
+void BaseSensor::commSendInitSequence() {}
 
 
 /**
@@ -148,7 +146,7 @@ void BaseSensor::commSendInitSequence(){}
  *      queries from the hub takes longer than 200ms, a disconnection
  *      will be performed here.
  */
-void BaseSensor::handleModes(){}
+void BaseSensor::handleModes() {}
 
 
 /**
@@ -158,8 +156,8 @@ void BaseSensor::handleModes(){}
  *      If true, the device must go in reset mode by setting the m_connected
  *      boolean to false.
  */
-void BaseSensor::process(){
-    if(!m_connected){
+void BaseSensor::process() {
+    if (!m_connected) {
         this->connectToHub();
         return;
     }
@@ -189,11 +187,11 @@ void BaseSensor::process(){
  * @return Header byte
  */
 uint8_t BaseSensor::getHeader(
-        const lump_msg_type_t& msg_type,
-        const uint8_t& mode,
-        const uint8_t& msg_size){
-    return (msg_type & LUMP_MSG_TYPE_MASK) | \
-           (mode & LUMP_MSG_CMD_MASK) | \
+    const lump_msg_type_t &msg_type,
+    const uint8_t &mode,
+    const uint8_t &msg_size) {
+    return (msg_type & LUMP_MSG_TYPE_MASK) |
+           (mode & LUMP_MSG_CMD_MASK) |
            ((msg_size * 3) & LUMP_MSG_SIZE_MASK);
 }
 
@@ -206,10 +204,10 @@ uint8_t BaseSensor::getHeader(
  * @param mode Reference See the class enumeration of modes.
  * @param msg_size Reference to message size.
  */
-void BaseSensor::parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg_size){
+void BaseSensor::parseHeader(const uint8_t &header, uint8_t &mode, uint8_t &msg_size) {
     // Type is known to be LUMP_MSG_TYPE_DATA because of 0x46 header
     // msg_type = header & LUMP_MSG_TYPE_MASK;
-    mode     = header & LUMP_MSG_CMD_MASK;
+    mode = header & LUMP_MSG_CMD_MASK;
     msg_size = getMsgSize(header);
 }
 
@@ -222,9 +220,9 @@ void BaseSensor::parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg_
  * @param header
  * @return Expected size
  */
-uint8_t BaseSensor::getMsgSize(const uint8_t& header){
+uint8_t BaseSensor::getMsgSize(const uint8_t &header) {
     // Simplified version that implicitly asserts that msg_type is LUMP_MSG_TYPE_DATA
-    return _(uint8_t) ((1 << (((header) >> 3) & 0x7)) + 2);
+    return _(uint8_t)((1 << (((header) >> 3) & 0x7)) + 2);
 }
 
 
@@ -233,7 +231,7 @@ uint8_t BaseSensor::getMsgSize(const uint8_t& header){
  *      Also add the checksum of the message.
  * @param msg_size Size of the message WITHOUT header & checksum: Payload size.
  */
-void BaseSensor::sendUARTBuffer(uint8_t msg_size){
+void BaseSensor::sendUARTBuffer(uint8_t msg_size) {
     // Add checksum to the last index
     m_txBuf[msg_size + 1] = calcChecksum(this->m_txBuf, msg_size);
     // Send data (size = payload + header + checksum = payload + 2)
