@@ -1,0 +1,17 @@
+# Keeps the GitHub Actions used by our workflows up to date.
+# Dependabot opens a pull request when a newer version is available;
+# CI runs on it as usual, and we merge it like any other PR.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "CI"
+    labels:
+      - "dependencies"
