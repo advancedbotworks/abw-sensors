@@ -13,24 +13,51 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 
 ## Channel outputs
 
-| Channel | Meaning | Range | Units | Notes |
-|---|---|---|---|---|
-| Red (R) | Left distance | about 40 – 3600 | mm | |
-| Green (G) | Front distance | about 40 – 3600 | mm | |
-| Blue (B) | Right distance | about 40 – 3600 | mm | |
+What the channels mean depends on the **firmware version** on your sensor. See [Firmware versions](../firmware/versions.md) to check which one you have.
 
-!!! note "How far it can see depends on the light and the surface"
-    The sensors run in the VL53L1X's **long distance mode**. ST's datasheet figures for this mode (measured with a 100 ms timing budget):
+=== "Firmware v3.0.0 (current)"
 
-    | Target | Dark | Bright ambient light |
+    | Channel | Meaning | Units |
     |---|---|---|
-    | White (88% reflective) | up to 360 cm | about 73 cm |
-    | Mid grey (54%) | up to 340 cm | about 69 cm |
-    | Dark grey (17%) | up to 170 cm | about 68 cm |
+    | Red (R) | Left distance | mm |
+    | Green (G) | Front distance | mm |
+    | Blue (B) | Right distance | mm |
+    | Intensity (I) | Not used (0) | |
+
+    **Special values** (instead of a distance):
+
+    | Value | Meaning |
+    |---|---|
+    | **9999** | Nothing within range (or the reading wasn't valid) |
+    | **65535** | That sensor isn't working (failed to start or stopped responding). The other two keep working |
+
+    Each sensor updates **30 times per second**.
+
+=== "Firmware v2.0.0"
+
+    | Channel | Meaning | Units |
+    |---|---|---|
+    | Red (R) | Left distance | mm |
+    | Green (G) | Front distance | mm |
+    | Blue (B) | Right distance | mm |
+    | Intensity (I) | Not used (0) | |
+
+    No special values: when nothing is in range, the sensor reports whatever reading it gets. If a sensor fails to start, the whole array stops responding.
+
+!!! note "How far it can see depends on the mode, the light and the surface"
+    **Firmware v3.0.0** uses the VL53L1X's **Short distance mode** by default: about **1.3 m in any lighting**, the most predictable choice for Rescue Maze. Advanced users can change the mode in the firmware (`ABW_LASER_DISTANCE_MODE`). **Firmware v2.0.0** uses **Long distance mode**.
+
+    ST's datasheet figures (white target, 100 ms timing budget):
+
+    | Mode | Dark | Bright ambient light |
+    |---|---|---|
+    | Short (v3 default) | 136 cm | 135 cm |
+    | Medium | 290 cm | 76 cm |
+    | Long (v2) | 360 cm | 73 cm |
 
     - **Ranging error:** ±20 mm in the dark, ±25 mm in ambient light.
     - **Below 4 cm,** a target is detected but the distance isn't accurate.
-    - The ABW firmware uses a shorter, 50 ms timing budget, so real-world maximum range may be a little lower than these figures. Measured ABW figures are to come.
+    - Darker targets reduce the range in Medium and Long modes (e.g. 170 cm for a dark grey target in Long mode, dark conditions).
 
 ## Quick start
 
@@ -54,7 +81,9 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
         while True:
             left, front, right, _ = color_sensor.rgbi(port.A)
             print("L", left, "mm  F", front, "mm  R", right, "mm")
-            if front < 100:
+            if front == 9999:            # firmware v3.0.0: nothing in range
+                print("No wall ahead")
+            elif front < 100:
                 print("Wall ahead!")
             await runloop.sleep_ms(50)
 
@@ -85,16 +114,29 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 
 ### Performance
 
-| | |
-|---|---|
-| Distance mode | Long (VL53L1X), 50 ms timing budget |
-| Range (ST datasheet, long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light. See the table above |
-| Minimum distance | 4 cm |
-| Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
-| Resolution | 1 mm |
-| Field of view | 27° cone per sensor |
-| Update rate | About 20 Hz per sensor (TBC). A fixed, documented rate is planned |
-| Surfaces | Works on most opaque surfaces. Very dark, shiny or transparent surfaces can give poor readings |
+=== "Firmware v3.0.0 (current)"
+
+    | | |
+    |---|---|
+    | Distance mode | Short (default), configurable in firmware |
+    | Range (ST datasheet, Short mode) | About 1.3 m in any lighting |
+    | Minimum distance | 4 cm |
+    | Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
+    | Resolution | 1 mm |
+    | Field of view | 27° cone per sensor |
+    | Update rate | 30 Hz per sensor (33 ms timing budget) |
+
+=== "Firmware v2.0.0"
+
+    | | |
+    |---|---|
+    | Distance mode | Long |
+    | Range (ST datasheet, Long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light |
+    | Minimum distance | 4 cm |
+    | Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
+    | Resolution | 1 mm |
+    | Field of view | 27° cone per sensor |
+    | Update rate | About 20 Hz per sensor |
 
 ## In the box
 
@@ -109,12 +151,13 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 ## Firmware
 
 - **Runs:** `LaserArrayFirmware` from the [AdvancedBotWorks library](../firmware/library.md), which uses Pololu's VL53L1X library
+- **Which version do I have?** See [Firmware versions](../firmware/versions.md)
 - **Source:** [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors), open source under the GPL-3.0. Third-party licences are listed under [Licences](../licences.md)
 - **Updates:** [Updating firmware](../firmware/updating.md)
 
 ## Known limitations
 
-- **Bright sunlight and other infrared light** greatly reduce the maximum range in long distance mode (to under 1 m in strong ambient light).
+- **Bright sunlight and other infrared light** greatly reduce the maximum range in Medium and Long modes (to under 1 m in strong ambient light). Short mode (v3 default) is barely affected.
 - **Glass, mirrors and very dark matte surfaces** may give wrong or no readings.
 - **Each sensor measures within a 27° cone, not a single point,** so a surface at an angle or a narrow object can affect the reading.
 
@@ -123,10 +166,11 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 | Version | Date | Changes |
 |---|---|---|
 | v1 | 2025-03 | First release (firmware library 2.0.0) |
+| v1 | TBC | Firmware v3.0.0: Short mode default, 30 Hz, special values 9999 / 65535 |
 
 !!! warning "Still to confirm"
     - Dimensions, weight, hole spacing and cable length
     - Current draw
     - Measured range and accuracy on ABW hardware (with the 50 ms timing budget, under competition lighting)
-    - Measured update rate (the firmware requests about 30 Hz, but the sensor's default timing gives about 20 Hz)
+    - Measured update rate on hardware (v3.0.0 is designed for 30 Hz)
     - What's reported when no surface is in range or a reading fails

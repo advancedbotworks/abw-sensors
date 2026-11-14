@@ -2,9 +2,9 @@
 
 Firmware library versions. Each release's source code is on [GitHub](https://github.com/advancedbotworks/abw-sensors/releases).
 
-## 3.0.0 (unreleased)
+## 3.0.0 (TBC: release date)
 
-**For teams (behaviour changes):**
+**For teams (behaviour changes).** See [Firmware versions](firmware/versions.md) for how to tell which version a sensor has, and what to change in your robot's code.
 
 - **IR Sensor Ring:**
     - **Advanced direction (blue) is now 450 when no ball is detected** (it was 0, which is also a valid angle). Simple direction (red) is still 0 for no ball.

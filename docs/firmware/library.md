@@ -1,7 +1,7 @@
 # Library for developers
 
-!!! note "This page describes v3.0.0 (coming soon)"
-    The current release, **v2.0.0**, uses different names: the library is `Advanced_Bot_Works_Sensors`, and the classes are `Colour_Sensor` and `TSSP_Array`. Browse the v2.0.0 source on the [releases page](https://github.com/advancedbotworks/abw-sensors/releases). The `main` branch on GitHub already has the v3 layout described below.
+!!! note "Older versions"
+    This page describes **v3.0.0 and later**. v2.0.0 used different names: the library was `Advanced_Bot_Works_Sensors`, and the classes were `Colour_Sensor` and `TSSP_Array`. Browse its source at the [v2.0.0 release](https://github.com/advancedbotworks/abw-sensors/releases/tag/v2.0.0).
 
 All the code that runs on ABW sensors is open source, in the **AdvancedBotWorks** Arduino library: [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors). Advanced teams are welcome to read it, learn from it and adapt it for their own robots.
 
@@ -29,7 +29,7 @@ Every ABW firmware follows the same pattern: fill a 4-value array, give it to `C
 #include <AdvancedBotWorks.h>
 
 ColourSensor hub;
-uint16_t data[4];   // R, G, B, (unused)
+uint16_t data[4];   // R, G, B, I (4th value)
 
 void setup() {
     hub.setSensorRGB_I(data);   // these values are sent to the hub
@@ -39,6 +39,7 @@ void loop() {
     data[0] = 123;  // red channel
     data[1] = 456;  // green channel
     data[2] = 789;  // blue channel
+    data[3] = 1;    // 4th value ("intensity")
     hub.process();  // talk to the hub: handshake, mode changes, sending data
 }
 ```
