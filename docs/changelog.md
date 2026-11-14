@@ -8,6 +8,9 @@ Firmware library versions. Each release's source code is on [GitHub](https://git
 
 - **IR Sensor Ring:**
     - **Advanced direction (blue) is now 450 when no ball is detected** (it was 0, which is also a valid angle). Simple direction (red) is still 0 for no ball.
+    - **Strength (green) is now the average of the strongest receiver and its two neighbours**, so it no longer dips when the ball is between two receivers.
+    - **Advanced direction uses a vector sum (centroid)** of the nearby receivers, giving a smoother angle all the way around.
+    - **New 4th value** (the "intensity" in `rgbi()`): **1 = ball detected, 0 = no ball**.
     - Rebuilt sampling: all 12 receivers are read together by a timer interrupt, and values update **100 times per second** with smoothing, so readings are steadier and more consistent.
     - Tuned for the RoboCup Junior IR golf ball (40 kHz, 8 pulses per burst at 1.2 kHz).
 - **Laser Distance Sensor Array:**
