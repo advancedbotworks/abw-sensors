@@ -11,7 +11,7 @@ jobs:
     name: Build firmware (Nano 33 IoT core)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: arduino/compile-sketches@v1
         with:
@@ -30,8 +30,8 @@ jobs:
     name: Arduino Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/arduino-lint-action@v2
+      - uses: actions/checkout@v7
+      - uses: arduino/arduino-lint-action@v3
         with:
           library-manager: submit
           compliance: specification

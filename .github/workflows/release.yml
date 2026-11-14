@@ -22,7 +22,7 @@ jobs:
     env:
       FQBN: arduino:samd:nano_33_iot
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Read version
         id: version
@@ -93,7 +93,7 @@ jobs:
           ls -l dist
 
       - name: Upload as workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abw-firmware-v${{ steps.version.outputs.version }}
           path: dist/
