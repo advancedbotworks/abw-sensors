@@ -44,6 +44,10 @@ void loop() {
 }
 ```
 
+## Version
+
+`#include <AdvancedBotWorks.h>` gives you `ABW_VERSION` (e.g. `"3.0.0"`). The firmware reports this version to the hub during its handshake, and prints it over USB when a Serial Monitor connects (`abw::printInfoOnUsbConnect()`).
+
 ## Naming conventions
 
 | Thing | Convention | Example |

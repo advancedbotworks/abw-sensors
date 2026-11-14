@@ -30,6 +30,17 @@ You can tell from the readings. No computer is needed.
     | **9999** | v3.0.0 or later |
     | Any other number | v2.0.0 |
 
+=== "Any sensor, using a computer (v3.0.0 and later)"
+
+    Connect the sensor to a computer by USB, open the Arduino IDE's **Serial Monitor** (any baud rate), and it prints:
+
+    ```
+    Advanced Bot Works IR Sensor Ring
+    Firmware v3.0.0 (AdvancedBotWorks library), hardware v1.0
+    ```
+
+    If nothing appears, close and reopen the Serial Monitor. If it still prints nothing, the sensor is on v2.0.0 or earlier.
+
 ## What changed in 3.0.0
 
 | | v2.0.0 | v3.0.0 |
@@ -44,6 +55,7 @@ You can tell from the readings. No computer is needed.
 | **Laser: update rate** | About 20 Hz | 30 Hz |
 | **Laser: nothing in range** | Raw reading | **9999** |
 | **Laser: sensor fault** | Whole array stops | That channel shows **65535** |
+| **Version reporting** | Always reported 1.0.0.0 to the hub | Real version to the hub, and printed over USB |
 
 !!! tip "Updating your robot's code for v3.0.0"
     - **IR Ring:** if your code treats **blue = 0** as "no ball", change it to check **red = 0**, **blue = 450**, or the 4th value = 0.
