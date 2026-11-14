@@ -49,6 +49,8 @@
 ColourSensor hub;
 IRRing irRing;
 
+void updateSensor();
+
 uint16_t data[4] = {0, 0, 450, 0};
 
 void setup() {
@@ -63,9 +65,19 @@ void setup() {
     irRing.setVectorSpan(ABW_IR_VECTOR_SPAN);
     irRing.init();
     hub.setSensorRGB_I(data);
+    // Keep sampling and USB output running while waiting for a hub
+    // (e.g. plugged into a computer on its own).
+    hub.setWaitCallback(updateSensor);
 }
 
 void loop() {
+    updateSensor();
+    hub.process();
+}
+
+// Everything except talking to the hub. Called from loop(), and from the
+// hub connection code while it waits for a hub.
+void updateSensor() {
     if (irRing.update()) {
         data[0] = irRing.getDirectionSimple();
         data[1] = irRing.getStrength();
@@ -101,5 +113,4 @@ void loop() {
 #endif
     }
     abw::printInfoOnUsbConnect("IR Sensor Ring"); // version info for support (USB Serial Monitor)
-    hub.process();
 }
