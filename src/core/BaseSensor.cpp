@@ -4,6 +4,13 @@
  *
  * Based on the original work of Ahmed Jouirou - <ahmed.jouirou@gmail.com>
  *
+ * Modified by Aparaj Bogahawatta for Advanced Bot Works, 2024-2026:
+ * adapted to emulate a SPIKE Prime colour sensor on Advanced Bot Works
+ * hardware, and files/classes renamed. See the git history for details.
+ * Modifications Copyright (C) 2024-2026 Aparaj Bogahawatta
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,9 +24,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "Base_Sensor.h"
+#include "BaseSensor.h"
 
-Base_Sensor::Base_Sensor() :
+BaseSensor::BaseSensor() :
     m_connSerialRX_pin(0),
     m_connSerialTX_pin(1),
     m_lastAckTick(0),
@@ -30,7 +37,7 @@ Base_Sensor::Base_Sensor() :
  * @brief Get status of connection with the hub.
  * @return bool
  */
-bool Base_Sensor::isConnected(){
+bool BaseSensor::isConnected(){
     return m_connected;
 }
 
@@ -41,7 +48,7 @@ bool Base_Sensor::isConnected(){
  * @param length Length of the payload (size WITHOUT header & checksum)
  * @return Checksum byte
  */
-uint8_t Base_Sensor::calcChecksum(uint8_t *pData, int length){
+uint8_t BaseSensor::calcChecksum(uint8_t *pData, int length){
     uint8_t lRet, i;
 
     lRet = 0xFF;
@@ -56,7 +63,7 @@ uint8_t Base_Sensor::calcChecksum(uint8_t *pData, int length){
  * @brief Wait until the hub is available on the serial RX line.
  *      Then, assert the TX line.
  */
-void Base_Sensor::commWaitForHubIdle(){
+void BaseSensor::commWaitForHubIdle(){
     // Disable uart: manual control TX and RX pins
     Serial1.end();
 
@@ -95,7 +102,7 @@ void Base_Sensor::commWaitForHubIdle(){
  *          - Wait ACK during 2s
  *          - Start UART connection at 115200 bauds
  */
-void Base_Sensor::connectToHub() {
+void BaseSensor::connectToHub() {
     // Wait for HUB to idle it's TX pin (idle = High)
     // TODO: ces bidouilles émettent b'\x00\x00' avant tout choses sur la ligne série !!
     commWaitForHubIdle();
@@ -130,7 +137,7 @@ void Base_Sensor::connectToHub() {
  *      This function is declared as virtual because connectToHub uses it
  *      and must use the derived method, sepcific of a sensor.
  */
-void Base_Sensor::commSendInitSequence(){}
+void BaseSensor::commSendInitSequence(){}
 
 
 /**
@@ -141,7 +148,7 @@ void Base_Sensor::commSendInitSequence(){}
  *      queries from the hub takes longer than 200ms, a disconnection
  *      will be performed here.
  */
-void Base_Sensor::handleModes(){}
+void BaseSensor::handleModes(){}
 
 
 /**
@@ -151,7 +158,7 @@ void Base_Sensor::handleModes(){}
  *      If true, the device must go in reset mode by setting the m_connected
  *      boolean to false.
  */
-void Base_Sensor::process(){
+void BaseSensor::process(){
     if(!m_connected){
         this->connectToHub();
         return;
@@ -181,7 +188,7 @@ void Base_Sensor::process(){
  *      to it's computation (Ex: payload of size 8 is considered of size 10).
  * @return Header byte
  */
-uint8_t Base_Sensor::getHeader(
+uint8_t BaseSensor::getHeader(
         const lump_msg_type_t& msg_type,
         const uint8_t& mode,
         const uint8_t& msg_size){
@@ -199,7 +206,7 @@ uint8_t Base_Sensor::getHeader(
  * @param mode Reference See the class enumeration of modes.
  * @param msg_size Reference to message size.
  */
-void Base_Sensor::parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg_size){
+void BaseSensor::parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg_size){
     // Type is known to be LUMP_MSG_TYPE_DATA because of 0x46 header
     // msg_type = header & LUMP_MSG_TYPE_MASK;
     mode     = header & LUMP_MSG_CMD_MASK;
@@ -215,7 +222,7 @@ void Base_Sensor::parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg
  * @param header
  * @return Expected size
  */
-uint8_t Base_Sensor::getMsgSize(const uint8_t& header){
+uint8_t BaseSensor::getMsgSize(const uint8_t& header){
     // Simplified version that implicitly asserts that msg_type is LUMP_MSG_TYPE_DATA
     return _(uint8_t) ((1 << (((header) >> 3) & 0x7)) + 2);
 }
@@ -226,7 +233,7 @@ uint8_t Base_Sensor::getMsgSize(const uint8_t& header){
  *      Also add the checksum of the message.
  * @param msg_size Size of the message WITHOUT header & checksum: Payload size.
  */
-void Base_Sensor::sendUARTBuffer(uint8_t msg_size){
+void BaseSensor::sendUARTBuffer(uint8_t msg_size){
     // Add checksum to the last index
     m_txBuf[msg_size + 1] = calcChecksum(this->m_txBuf, msg_size);
     // Send data (size = payload + header + checksum = payload + 2)

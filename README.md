@@ -26,15 +26,15 @@ Alternatively, download the LEGO Education SPIKE™ App which will have the same
 
 If you are using version 2.3.4 or later of the [Arduino software (IDE)](http://www.arduino.cc/en/Main/Software), you can use the Library Manager to install this library:
 
-1. Download the [latest release archive from GitHub](https://github.com/aparajb/Advanced_Bot_Works_Sensors) as a .ZIP file.
+1. Download the [latest release archive from GitHub](https://github.com/advancedbotworks/abw-sensors) as a .ZIP file.
 2. In the Arduino IDE, open the "Sketch" menu, select "Include Library", then "Add .ZIP Library...".
 3. Navigate your file explorer to where the Advanced_Bot_Works_Sensors ZIP file is stored and select it.
 4. Follow any further prompts given.
 
 If this does not work, you can manually install the library:
 
-1. Download the [latest release archive from GitHub](https://github.com/aparajb/Advanced_Bot_Works_Sensors) as a .ZIP file and decompress it.
-2. Rename the folder "Advanced_Bot_Works_Sensors-main" to "Advanced_Bot_Works_Sensors".
+1. Download the [latest release archive from GitHub](https://github.com/advancedbotworks/abw-sensors) as a .ZIP file and decompress it.
+2. Rename the folder "abw-sensors-main" to "Advanced_Bot_Works_Sensors".
 3. Move the "Advanced_Bot_Works_Sensors" folder into the "libraries" directory inside your Arduino sketchbook directory.  You can view your sketchbook location by opening the "File" menu and selecting "Preferences" in the Arduino IDE.  If there is not already a "libraries" folder in that location, you should make the folder yourself.
 4. After installing the library, restart the Arduino IDE.
 
@@ -44,7 +44,24 @@ Several example sketches are available that show how to use the library. You can
 
 Each example corresponds to the actual code uploaded on all the relevant sensor before shipping. Feel free to read through the code to understand how the calculations are performed.
 
+## Using the library
+
+Include everything with a single header:
+
+```cpp
+#include <AdvancedBotWorks.h>
+```
+
+The Laser Distance Sensor Array firmware also needs Pololu's [VL53L1X](https://github.com/pololu/vl53l1x-arduino) library. The Arduino Library Manager installs it automatically. If you install from a ZIP, install it yourself from the Library Manager.
+
 ## Version History
 
+* 3.0.0 (unreleased): Restructured the library (`src/core`, `src/sensors`). Renamed classes and methods to Arduino conventions (`ColourSensor`, `IRRing`, `getDirectionSimple()`, ...) and added a single include, `AdvancedBotWorks.h`. Pololu's VL53L1X driver is now a dependency instead of a bundled copy. Added third-party licence notices and CI. **Breaking:** sketches written for 2.x need the new names.
 * 2.0.0 (2025-03-07): Added LRF Module to the library.
-* 1.0.0 (2024-06-04): Original Release for IR Ring found [here](https://github.com/aparajb/ABW_IR_Ring)
+* 1.0.0 (2024-06-04): Original Release for IR Ring found [here](https://github.com/advancedbotworks/abw-ir-ring) (archived)
+
+## Licence
+
+Copyright (C) 2024-2026 Aparaj Bogahawatta.
+
+This library is free software, released under the [GNU General Public License v3.0 or later](LICENSE). Parts of it are based on [MyOwnBricks](https://github.com/ysard/MyOwnBricks) (GPL-3.0-or-later) and [Pybricks](https://github.com/pybricks/pybricks-micropython) (MIT). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the full credits and licences.

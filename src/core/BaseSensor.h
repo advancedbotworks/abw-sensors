@@ -4,6 +4,13 @@
  *
  * Based on the original work of Ahmed Jouirou - <ahmed.jouirou@gmail.com>
  *
+ * Modified by Aparaj Bogahawatta for Advanced Bot Works, 2024-2026:
+ * adapted to emulate a SPIKE Prime colour sensor on Advanced Bot Works
+ * hardware, and files/classes renamed. See the git history for details.
+ * Modifications Copyright (C) 2024-2026 Aparaj Bogahawatta
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,8 +24,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef BASE_SENSOR_H
-#define BASE_SENSOR_H
+#ifndef BASESENSOR_H
+#define BASESENSOR_H
 
 #include "lego_uart.h"
 #include <Arduino.h>
@@ -37,10 +44,10 @@
  * @param m_lastAckTick Time flag used to detect disconnection from the hub.
  * @param m_connected Connection flag.
  */
-class Base_Sensor {
+class BaseSensor {
 
 public:
-    Base_Sensor();
+    BaseSensor();
     // virtual ~BasicSensor(){}
     void process();
     bool isConnected();
@@ -68,4 +75,4 @@ protected:
     bool m_connected;
 };
 
-#endif // BASE_SENSOR_H
+#endif // BASESENSOR_H

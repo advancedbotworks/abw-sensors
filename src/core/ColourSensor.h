@@ -2,6 +2,13 @@
  * A library for the emulation of PoweredUp sensors on microcontrollers
  * Copyright (C) 2022 Ysard - <ysard@users.noreply.github.com>
  *
+ * Modified by Aparaj Bogahawatta for Advanced Bot Works, 2024-2026:
+ * adapted to emulate a SPIKE Prime colour sensor on Advanced Bot Works
+ * hardware, and files/classes renamed. See the git history for details.
+ * Modifications Copyright (C) 2024-2026 Aparaj Bogahawatta
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,11 +22,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef COLOUR_SENSOR_H
-#define COLOUR_SENSOR_H
+#ifndef COLOURSENSOR_H
+#define COLOURSENSOR_H
 
 #include <Arduino.h>
-#include "Base_Sensor.h"
+#include "BaseSensor.h"
 
 
 // Colors (detected & LED (except NONE for this last one)) expected values
@@ -81,7 +88,7 @@
  * @param m_currentExtMode Extended mode switch for modes >= 8. Available values:
  *      EXT_MODE_0, EXT_MODE_8.
  */
-class Colour_Sensor : public Base_Sensor {
+class ColourSensor : public BaseSensor {
     // LEGO SPIKE Color Sensor modes
     // Pybricks uses modes 3, 5, 7 only
     // https://github.com/pybricks/pybricks-micropython/blob/master/pybricks/util_pb/pb_device.h
@@ -99,9 +106,9 @@ class Colour_Sensor : public Base_Sensor {
     };
 
 public:
-    Colour_Sensor();
-    Colour_Sensor(uint8_t *pSensorColor, uint16_t *pRGB_I, uint16_t *pHSV);
-    virtual ~Colour_Sensor();
+    ColourSensor();
+    ColourSensor(uint8_t *pSensorColor, uint16_t *pRGB_I, uint16_t *pHSV);
+    virtual ~ColourSensor();
 
     uint16_t getSensorIRCode();
     void setSensorRGB_I(uint16_t *pData);
@@ -146,4 +153,4 @@ private:
     uint8_t m_currentExtMode = 0;
 };
 
-#endif // COLOUR_SENSOR_H
+#endif // COLOURSENSOR_H
