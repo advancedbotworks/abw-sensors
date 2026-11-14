@@ -47,8 +47,9 @@
  *   3. If the hub goes quiet for more than 200 ms (e.g. unplugged),
  *      m_connected is cleared and the next process() starts again at 1.
  *
- * Note for ABW firmware: step 1 blocks loop() while no hub is connected,
- * so anything else in loop() only runs between connection attempts.
+ * Note for ABW firmware: step 1 blocks loop() while no hub is connected.
+ * Use setWaitCallback() to keep other work (e.g. USB output, sampling)
+ * running while it waits.
  *
  * @param m_connSerialRX_pin Serial RX pin of the board. (default: 0).
  * @param m_connSerialTX_pin Serial TX pin of the board. (default: 1).
@@ -63,6 +64,12 @@ public:
     // virtual ~BasicSensor(){}
     void process();
     bool isConnected();
+
+    // Called repeatedly while waiting for a hub (connectToHub()), so a
+    // sketch can keep doing other work, e.g. printing over USB when the
+    // sensor is plugged into a computer without a hub. Keep it short
+    // (well under 10 ms). Pass nullptr to remove it.
+    void setWaitCallback(void (*callback)());
 
 protected:
     // Protocol handy functions
@@ -85,6 +92,9 @@ protected:
     unsigned long m_lastAckTick;
 
     bool m_connected;
+
+    void (*m_waitCallback)() = nullptr;
+    void runWaitCallback();
 };
 
 #endif // BASESENSOR_H

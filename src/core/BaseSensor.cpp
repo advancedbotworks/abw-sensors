@@ -32,6 +32,21 @@ BaseSensor::BaseSensor() : m_connSerialRX_pin(0),
                            m_connected(false) {}
 
 /**
+ * @brief Set a function to call repeatedly while waiting for the hub.
+ *      (ABW addition.) See BaseSensor.h.
+ */
+void BaseSensor::setWaitCallback(void (*callback)()) {
+    m_waitCallback = callback;
+}
+
+void BaseSensor::runWaitCallback() {
+    if (m_waitCallback != nullptr) {
+        m_waitCallback();
+    }
+}
+
+
+/**
  * @brief Get status of connection with the hub.
  * @return bool
  */
@@ -79,6 +94,7 @@ void BaseSensor::commWaitForHubIdle() {
         if (millis() - idletick > 100) {
             break;
         }
+        runWaitCallback();
     }
 
     digitalWrite(m_connSerialTX_pin, HIGH);
@@ -124,6 +140,7 @@ void BaseSensor::connectToHub() {
             }
         }
         currenttime = millis();
+        runWaitCallback();
         delay(10);
     }
 }

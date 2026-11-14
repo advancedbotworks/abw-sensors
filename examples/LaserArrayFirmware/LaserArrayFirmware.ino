@@ -55,6 +55,9 @@ uint16_t data[4] = {0};
 
 ColourSensor hub;
 VL53L1X sensors[SENSOR_COUNT];
+
+void updateSensors();
+void updateSensorsWhileWaiting();
 bool sensorOk[SENSOR_COUNT] = {false};
 float smoothed[SENSOR_COUNT] = {0};
 bool hasReading[SENSOR_COUNT] = {false};
@@ -108,9 +111,28 @@ void setup() {
         sensorOk[i] = true;
         lastReadingMs[i] = millis();
     }
+
+    // Keep reading and USB output running while waiting for a hub.
+    hub.setWaitCallback(updateSensorsWhileWaiting);
 }
 
 void loop() {
+    updateSensors();
+    hub.process();
+}
+
+// While waiting for a hub, keep reading the sensors and serving USB, but
+// at most every 5 ms so the I2C traffic doesn't slow the hub detection.
+void updateSensorsWhileWaiting() {
+    static unsigned long lastMs = 0;
+    if (millis() - lastMs >= 5) {
+        lastMs = millis();
+        updateSensors();
+    }
+}
+
+// Everything except talking to the hub.
+void updateSensors() {
     unsigned long now = millis();
 
     for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
@@ -156,5 +178,4 @@ void loop() {
 #endif
 
     abw::printInfoOnUsbConnect("Laser Distance Sensor Array"); // version info for support (USB Serial Monitor)
-    hub.process();
 }
