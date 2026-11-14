@@ -12,12 +12,22 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 
 | Channel | Meaning | Range | Units | Notes |
 |---|---|---|---|---|
-| Red (R) | Left distance | 0 – about 4000 | mm | |
-| Green (G) | Front distance | 0 – about 4000 | mm | |
-| Blue (B) | Right distance | 0 – about 4000 | mm | |
+| Red (R) | Left distance | about 40 – 3600 | mm | |
+| Green (G) | Front distance | about 40 – 3600 | mm | |
+| Blue (B) | Right distance | about 40 – 3600 | mm | |
 
-!!! note "Accuracy beyond about 1.3 m"
-    Readings are most accurate up to about **1.3 m**. The sensors can report distances of 3–4 m, but beyond about 1.3 m (and in bright ambient light) treat those readings as approximate.
+!!! note "How far it can see depends on the light and the surface"
+    The sensors run in the VL53L1X's **long distance mode**. ST's datasheet figures for this mode (measured with a 100 ms timing budget):
+
+    | Target | Dark | Bright ambient light |
+    |---|---|---|
+    | White (88% reflective) | up to 360 cm | about 73 cm |
+    | Mid grey (54%) | up to 340 cm | about 69 cm |
+    | Dark grey (17%) | up to 170 cm | about 68 cm |
+
+    - **Ranging error:** ±20 mm in the dark, ±25 mm in ambient light.
+    - **Below 4 cm,** a target is detected but the distance isn't accurate.
+    - The ABW firmware uses a shorter, 50 ms timing budget, so real-world maximum range may be a little lower than these figures. Measured ABW figures are to come.
 
 ## Quick start
 
@@ -65,18 +75,21 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 | | |
 |---|---|
 | Supply | From the SPIKE hub port |
-| Current draw | TBC mA |
+| Current draw | TBC (measured). The three VL53L1X sensors alone draw about 48 mA typical while ranging (16 mA each, ST datasheet) |
 | Microcontroller | Microchip ATSAMD21G18A (ARM Cortex-M0+, 48 MHz) |
-| Distance sensors | 3 × ST VL53L1X time-of-flight laser sensors (Class 1 laser, eye-safe) |
+| Distance sensors | 3 × ST VL53L1X time-of-flight laser sensors (940 nm, Class 1 laser, eye-safe) |
 | USB | USB port on the board for firmware updates (see [Updating firmware](../firmware/updating.md)) |
 
 ### Performance
 
 | | |
 |---|---|
-| Range | Most accurate up to about 1.3 m. Readings up to about 3–4 m are possible, but less accurate |
+| Distance mode | Long (VL53L1X), 50 ms timing budget |
+| Range (ST datasheet, long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light. See the table above |
+| Minimum distance | 4 cm |
+| Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
 | Resolution | 1 mm |
-| Accuracy | TBC (to be measured) |
+| Field of view | 27° cone per sensor |
 | Update rate | About 20 Hz per sensor (TBC). A fixed, documented rate is planned |
 | Surfaces | Works on most opaque surfaces. Very dark, shiny or transparent surfaces can give poor readings |
 
@@ -98,9 +111,9 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 
 ## Known limitations
 
-- **Bright sunlight and other infrared light** reduce the maximum range and accuracy.
+- **Bright sunlight and other infrared light** greatly reduce the maximum range in long distance mode (to under 1 m in strong ambient light).
 - **Glass, mirrors and very dark matte surfaces** may give wrong or no readings.
-- **Each sensor measures within a cone, not a single point,** so a surface at an angle or a narrow object can affect the reading.
+- **Each sensor measures within a 27° cone, not a single point,** so a surface at an angle or a narrow object can affect the reading.
 
 ## Revision history
 
@@ -111,6 +124,6 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 !!! warning "Still to confirm"
     - Dimensions, weight, hole spacing and cable length
     - Current draw
-    - Measured accuracy at several distances
+    - Measured range and accuracy on ABW hardware (with the 50 ms timing budget, under competition lighting)
     - Measured update rate (the firmware requests about 30 Hz, but the sensor's default timing gives about 20 Hz)
     - What's reported when no surface is in range or a reading fails
