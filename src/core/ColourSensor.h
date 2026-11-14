@@ -47,6 +47,23 @@
 #define EXT_MODE_0 0x00 // for mode numbers < 8
 #define EXT_MODE_8 0x08 // for mode numbers >= 8
 
+/*
+ * How ABW sensors use this class
+ * ------------------------------
+ * Every ABW sensor pretends to be a LEGO SPIKE colour sensor. The firmware
+ * only uses one of its modes: RGB_I (mode 5), which normally carries the raw
+ * red, green, blue and intensity values. ABW firmware gives this class a
+ * 4-element uint16_t array with setSensorRGB_I() and writes its own data into
+ * it; the hub (SPIKE app, Python, Pybricks) then reads those 4 values as
+ * R, G, B and I. The other modes still answer with defaults so the hub sees a
+ * complete, valid colour sensor.
+ *
+ *     ColourSensor hub;
+ *     uint16_t data[4];
+ *     void setup() { hub.setSensorRGB_I(data); }
+ *     void loop()  { data[0] = ...; hub.process(); }
+ */
+
 /**
  * @brief Handle the LegoUART protocol and define modes of the
  *      Spike/Technic Color Sensor.

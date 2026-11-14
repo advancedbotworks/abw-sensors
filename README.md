@@ -6,7 +6,6 @@ This is a library is utilised by all of the sensors manufactured by [Advanced Bo
 
 The code that runs on each sensor can be found in the "examples" folder.
 
-Apologies for the lack of commenting - this will be rectified when I next have time.
 
 ## Supported Platforms
 

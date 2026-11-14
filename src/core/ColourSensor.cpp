@@ -373,7 +373,7 @@ void ColourSensor::handleModes() {
         // Read the remaining bytes after the header (cheksum included)
         // Data will be in the indexes [0;msg_size-2]
         ret = Serial1.readBytes(m_rxBuf, msg_size - 1);
-        if (_(signed)(ret) != msg_size - 1)
+        if (static_cast<signed>(ret) != msg_size - 1)
             return;
 
         switch (mode) {
