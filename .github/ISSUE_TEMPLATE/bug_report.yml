@@ -1,0 +1,111 @@
+name: Bug report
+description: A sensor or the firmware isn't behaving as documented.
+title: "[Bug]: "
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem! The more of this you can fill in, the faster we can help.
+
+        **Not sure it's a bug?** Check the docs first: https://docs.advancedbotworks.com. You can also email support@advancedbotworks.com (please include your order number).
+
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      options:
+        - IR Sensor Ring (v1)
+        - Laser Distance Sensor Array (v1)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: firmware
+    attributes:
+      label: Firmware version
+      description: |
+        How to check:
+        - **Serial Monitor (v3.0.0 and later):** connect the sensor by USB and open the Arduino IDE Serial Monitor. It prints the version.
+        - **IR Sensor Ring:** with no IR ball nearby, **blue = 450** means v3.0.0+, **blue = 0** means v2.0.0 or earlier.
+        - **Laser Array:** pointed at open space, **9999** means v3.0.0+.
+      options:
+        - 3.0.0
+        - 2.0.0
+        - 1.0.0
+        - Not sure
+        - Other (say below)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: How are you reading the sensor?
+      options:
+        - SPIKE App 3, Word Blocks
+        - SPIKE App 3, Python
+        - SPIKE Legacy app (2.x)
+        - Pybricks
+        - Arduino / my own firmware build
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+      placeholder: |
+        Expected: blue to show the ball's angle as it moves around the robot.
+        Actual: blue stays at 450 even with the ball 20 cm away.
+    validations:
+      required: true
+
+  - type: textarea
+    id: values
+    attributes:
+      label: R / G / B (and I) values you're seeing
+      description: Copy the numbers from the SPIKE app's device view or your program, and describe where the ball or target was.
+      placeholder: |
+        Ball ~30 cm in front of the robot: R=0  G=0  B=450  I=0
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Plug the sensor into port A
+        2. Run this program: ...
+        3. Move the ball to ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup details
+      description: Anything else that might matter, e.g. which IR ball, lighting (sunlight, venue lights), how the sensor is mounted, other sensors nearby.
+    validations:
+      required: false
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Photos, videos or code
+      description: Drag files in here, or paste your program.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Things I've tried
+      options:
+        - label: A different hub port
+        - label: Restarting the hub and reconnecting the app
+        - label: The troubleshooting tips on the product's docs page
