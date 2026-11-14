@@ -5,6 +5,7 @@
 Email **[support@advancedbotworks.com](mailto:support@advancedbotworks.com)** and include:
 
 - the **product** (e.g. IR Sensor Ring v1) and roughly when you bought it
+- the **firmware version** if you can (see [Firmware versions](firmware/versions.md) for how to check)
 - your **order number**, if you have it
 - **what you expected and what happened**, plus the R/G/B values you're seeing if you can
 - a **photo or short video**, if it helps show the problem

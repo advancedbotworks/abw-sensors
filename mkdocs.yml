@@ -39,6 +39,7 @@ nav:
       - IR Sensor Ring (v1): products/ir-ring-v1.md
       - Laser Distance Sensor Array (v1): products/laser-array-v1.md
   - Firmware:
+      - Firmware versions: firmware/versions.md
       - Updating firmware: firmware/updating.md
       - Library for developers: firmware/library.md
       - How the sensors talk to the hub: firmware/protocol.md

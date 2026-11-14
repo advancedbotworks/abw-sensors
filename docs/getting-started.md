@@ -33,7 +33,8 @@ The standard colour sensor blocks only give a colour or a reflection value. To r
     from hub import port
     import color_sensor
 
-    # r, g, b are the sensor's three data channels; i is unused
+    # r, g, b are the sensor's three data channels; i is a 4th value
+    # (IR Ring, firmware v3.0.0: 1 = ball detected; otherwise 0)
     r, g, b, i = color_sensor.rgbi(port.A)
     print(r, g, b)
     ```
@@ -54,7 +55,7 @@ The standard colour sensor blocks only give a colour or a reflection value. To r
     !!! note
         This method hasn't been tested on every Pybricks version yet. Let us know how it goes.
 
-Then see your product's page for what R, G and B mean:
+Then see your product's page for what R, G and B mean. They can differ between [firmware versions](firmware/versions.md):
 
 - [IR Sensor Ring](products/ir-ring-v1.md)
 - [Laser Distance Sensor Array](products/laser-array-v1.md)
