@@ -1,7 +1,7 @@
 # Library for developers
 
 !!! note "This page describes v3.0.0 (coming soon)"
-    The current release, **v2.0.0**, uses different names: the library is `Advanced_Bot_Works_Sensors`, and the classes are `Colour_Sensor` and `TSSP_Array`. Browse the v2.0.0 source on the [releases page](https://github.com/advancedbotworks/abw-sensors/releases). The `main` branch on GitHub already has the v3 layout described below.
+    The current release, **v2.0.0**, uses different names: the library is `Advanced_Bot_Works_Sensors`, and the class names also differ (see the v2.0.0 source). Browse the v2.0.0 source on the [releases page](https://github.com/advancedbotworks/abw-sensors/releases). The `main` branch on GitHub already has the v3 layout described below.
 
 All the code that runs on ABW sensors is open source, in the **AdvancedBotWorks** Arduino library: [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors). Advanced teams are welcome to read it, learn from it and adapt it for their own robots.
 
@@ -57,7 +57,7 @@ ABW code uses Australian spelling ("Colour"). Third-party code keeps its origina
 
 ## Building
 
-The firmware targets the **ATSAMD21G18A** and is built with the Arduino SAMD core, board **Arduino NANO 33 IoT** (`arduino:samd:nano_33_iot`). Every pull request is compiled automatically by GitHub Actions.
+The firmware is built with the Arduino SAMD core, board **Arduino NANO 33 IoT** (`arduino:samd:nano_33_iot`). Every pull request is compiled automatically by GitHub Actions.
 
 ## Contributing
 

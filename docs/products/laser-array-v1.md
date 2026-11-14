@@ -20,7 +20,7 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 | Blue (B) | Right distance | about 40 – 3600 | mm | |
 
 !!! note "How far it can see depends on the light and the surface"
-    The sensors run in the VL53L1X's **long distance mode**. ST's datasheet figures for this mode (measured with a 100 ms timing budget):
+    The sensors run in their **long distance mode**. Datasheet figures for this mode (measured with a 100 ms timing budget):
 
     | Target | Dark | Bright ambient light |
     |---|---|---|
@@ -78,19 +78,19 @@ Three laser time-of-flight distance sensors, facing **left, forward and right** 
 | | |
 |---|---|
 | Supply | From the SPIKE hub port |
-| Current draw | TBC (measured). The three VL53L1X sensors alone draw about 48 mA typical while ranging (16 mA each, ST datasheet) |
-| Microcontroller | Microchip ATSAMD21G18A (ARM Cortex-M0+, 48 MHz) |
-| Distance sensors | 3 × ST VL53L1X time-of-flight laser sensors (940 nm, Class 1 laser, eye-safe) |
+| Current draw | TBC (measured). The three laser sensors alone draw about 48 mA typical while ranging (16 mA each, datasheet) |
+| Microcontroller | 32-bit ARM microcontroller |
+| Distance sensors | 3 × laser time-of-flight sensors (940 nm, Class 1 laser, eye-safe) |
 | USB | USB port on the board for firmware updates (see [Updating firmware](../firmware/updating.md)) |
 
 ### Performance
 
 | | |
 |---|---|
-| Distance mode | Long (VL53L1X), 50 ms timing budget |
-| Range (ST datasheet, long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light. See the table above |
+| Distance mode | Long, 50 ms timing budget |
+| Range (datasheet, long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light. See the table above |
 | Minimum distance | 4 cm |
-| Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
+| Ranging error (datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
 | Resolution | 1 mm |
 | Field of view | 27° cone per sensor |
 | Update rate | About 20 Hz per sensor (TBC). A fixed, documented rate is planned |
@@ -108,7 +108,7 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 
 ## Firmware
 
-- **Runs:** `LaserArrayFirmware` from the [AdvancedBotWorks library](../firmware/library.md), which uses Pololu's VL53L1X library
+- **Runs:** `LaserArrayFirmware` from the [AdvancedBotWorks library](../firmware/library.md), which uses a third-party laser sensor driver (credited under [Licences](../licences.md))
 - **Source:** [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors), open source under the GPL-3.0. Third-party licences are listed under [Licences](../licences.md)
 - **Updates:** [Updating firmware](../firmware/updating.md)
 

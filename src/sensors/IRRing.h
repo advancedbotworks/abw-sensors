@@ -23,11 +23,11 @@
 #include "IRRingMath.h"   // ABW_IR_SENSOR_COUNT, output values, the maths
 
 /*
- * IR Sensor Ring driver: 12 x Vishay TSSP77038 receivers, 30 degrees apart.
+ * IR Sensor Ring driver: 12 x 38 kHz IR receiver modules, 30 degrees apart.
  *
  * How it works
  * ------------
- * The TSSP demodulates the ball's 40 kHz carrier internally. Its output is
+ * Each receiver demodulates the ball's 40 kHz carrier internally. Its output is
  * active-low only while a burst is present, so what matters is the FRACTION
  * OF TIME each output is low over a fixed window, not any single read.
  *

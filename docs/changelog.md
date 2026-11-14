@@ -14,14 +14,14 @@ Firmware library versions. Each release's source code is on [GitHub](https://git
     - Rebuilt sampling: all 12 receivers are read together by a timer interrupt, and values update **100 times per second** with smoothing, so readings are steadier and more consistent.
     - Tuned for the RoboCup Junior IR golf ball (40 kHz, 8 pulses per burst at 1.2 kHz).
 - **Laser Distance Sensor Array:**
-    - Now uses the VL53L1X's **Short distance mode by default** (about 1.3 m in any lighting), at **30 readings per second** (previously Long mode at about 20 per second).
+    - Now uses the laser sensors' **Short distance mode by default** (about 1.3 m in any lighting), at **30 readings per second** (previously Long mode at about 20 per second).
     - **9999** means no target in range; **65535** means a sensor error.
 
 **For developers (breaking):**
 
 - Library renamed to **AdvancedBotWorks**, with a single include: `#include <AdvancedBotWorks.h>`
 - Classes and methods renamed to Arduino conventions: `ColourSensor`, `IRRing`, `getDirectionSimple()`, `getStrength()`, `getDirectionAdvanced()`
-- Pololu's VL53L1X library is now a dependency rather than a bundled copy
+- The laser sensor driver library is now installed as a dependency rather than bundled
 - Added third-party licence notices and automatic build checks
 
 ## 2.0.0 (2025-03-07)

@@ -75,7 +75,7 @@ jobs:
           | ABW-IRRingFirmware-v$v.bin | IR Sensor Ring |
           | ABW-LaserArrayFirmware-v$v.bin | Laser Distance Sensor Array |
 
-          Board: Arduino NANO 33 IoT core (\`$FQBN\`), ATSAMD21G18A, via USB.
+          Board: Arduino NANO 33 IoT core (\`$FQBN\`), via USB.
 
           With arduino-cli (unplug the sensor from the hub first):
 

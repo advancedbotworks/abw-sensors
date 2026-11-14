@@ -8,7 +8,7 @@
  *
  * The ball is simulated: each receiver's smoothed strength follows a
  * cos^k lobe of the angle between the receiver and the ball, which is a
- * reasonable stand-in for a TSSP's directional response.
+ * reasonable stand-in for an IR receiver's directional response.
  */
 #include "IRRingMath.h"
 
