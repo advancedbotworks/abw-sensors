@@ -45,7 +45,6 @@
  * @param m_connected Connection flag.
  */
 class BaseSensor {
-
 public:
     BaseSensor();
     // virtual ~BasicSensor(){}
@@ -55,9 +54,9 @@ public:
 protected:
     // Protocol handy functions
     uint8_t calcChecksum(uint8_t *pData, int length);
-    uint8_t getHeader(const lump_msg_type_t& msg_type, const uint8_t& mode, const uint8_t& msg_size);
-    void parseHeader(const uint8_t& header, uint8_t& mode, uint8_t& msg_size);
-    uint8_t getMsgSize(const uint8_t& header);
+    uint8_t getHeader(const lump_msg_type_t &msg_type, const uint8_t &mode, const uint8_t &msg_size);
+    void parseHeader(const uint8_t &header, uint8_t &mode, uint8_t &msg_size);
+    uint8_t getMsgSize(const uint8_t &header);
     void sendUARTBuffer(uint8_t msg_size);
     void commWaitForHubIdle();
     void connectToHub();

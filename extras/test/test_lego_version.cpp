@@ -13,22 +13,23 @@
 using namespace abw;
 
 static int g_failures = 0;
-#define CHECK(cond)                                                       \
-    do {                                                                  \
-        if (!(cond)) {                                                    \
-            g_failures++;                                                 \
-            printf("  FAIL %s:%d: %s\n", __FILE__, __LINE__, #cond);      \
-        }                                                                 \
+#define CHECK(cond)                                                  \
+    do {                                                             \
+        if (!(cond)) {                                               \
+            g_failures++;                                            \
+            printf("  FAIL %s:%d: %s\n", __FILE__, __LINE__, #cond); \
+        }                                                            \
     } while (0)
 
-static void expectMessage(uint32_t fw, uint32_t hw, const uint8_t expected[10], const char* name) {
+static void expectMessage(uint32_t fw, uint32_t hw, const uint8_t expected[10], const char *name) {
     uint8_t msg[kLegoVersionMessageSize];
     buildLegoVersionMessage(msg, fw, hw);
     bool ok = memcmp(msg, expected, 10) == 0;
     if (!ok) {
         g_failures++;
         printf("  FAIL %s: got", name);
-        for (int i = 0; i < 10; i++) printf(" %02X", msg[i]);
+        for (int i = 0; i < 10; i++)
+            printf(" %02X", msg[i]);
         printf("\n");
     }
     printf("%s %s\n", ok ? "PASS" : "FAIL", name);
@@ -55,7 +56,8 @@ int main() {
     buildLegoVersionMessage(msg, legoVersion(ABW_VERSION_MAJOR, ABW_VERSION_MINOR, ABW_VERSION_PATCH),
                             legoVersion(ABW_HARDWARE_VERSION_MAJOR, ABW_HARDWARE_VERSION_MINOR, 0));
     uint8_t x = 0xFF;
-    for (int i = 0; i < 10; i++) x ^= msg[i];
+    for (int i = 0; i < 10; i++)
+        x ^= msg[i];
     CHECK(x == 0);
     CHECK(msg[0] == 0x5F);
 

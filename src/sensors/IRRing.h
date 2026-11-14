@@ -20,7 +20,7 @@
 #define ABW_IRRING_H
 
 #include <Arduino.h>
-#include "IRRingMath.h"   // ABW_IR_SENSOR_COUNT, output values, the maths
+#include "IRRingMath.h" // ABW_IR_SENSOR_COUNT, output values, the maths
 
 /*
  * IR Sensor Ring driver: 12 x 38 kHz IR receiver modules, 30 degrees apart.
@@ -83,8 +83,8 @@
 class IRRing {
 public:
     enum DirectionMethod {
-        DIRECTION_VECTOR_SUM = abw::IR_DIRECTION_VECTOR_SUM,       // centroid of nearby receivers (default)
-        DIRECTION_INTERPOLATION = abw::IR_DIRECTION_INTERPOLATION  // v2-style neighbour interpolation
+        DIRECTION_VECTOR_SUM = abw::IR_DIRECTION_VECTOR_SUM,      // centroid of nearby receivers (default)
+        DIRECTION_INTERPOLATION = abw::IR_DIRECTION_INTERPOLATION // v2-style neighbour interpolation
     };
 
     IRRing() {}
@@ -97,24 +97,24 @@ public:
     bool update();
 
     // ---- Outputs ----
-    uint8_t  getDirectionSimple();    // 1-12, or 0 when no ball
-    uint8_t  getStrength();           // 0-100, average of strongest + 2 neighbours
-    uint16_t getDirectionAdvanced();  // 0-359 degrees, or 450 when no ball
-    bool     isBallDetected();
+    uint8_t getDirectionSimple();    // 1-12, or 0 when no ball
+    uint8_t getStrength();           // 0-100, average of strongest + 2 neighbours
+    uint16_t getDirectionAdvanced(); // 0-359 degrees, or 450 when no ball
+    bool isBallDetected();
 
     // ---- Settings ----
-    void setDutyMax(float dutyMax);           // calibration, see ABW_IR_DEFAULT_DUTY_MAX
-    void setSmoothing(float alpha);           // 0 < alpha <= 1 (1 = off)
-    void setNoBallThreshold(float strength);  // 0-100
-    void setStrengthMax(float average);       // calibration, see ABW_IR_DEFAULT_STRENGTH_MAX
+    void setDutyMax(float dutyMax);          // calibration, see ABW_IR_DEFAULT_DUTY_MAX
+    void setSmoothing(float alpha);          // 0 < alpha <= 1 (1 = off)
+    void setNoBallThreshold(float strength); // 0-100
+    void setStrengthMax(float average);      // calibration, see ABW_IR_DEFAULT_STRENGTH_MAX
     void setDirectionMethod(DirectionMethod method);
-    void setVectorSpan(uint8_t span);         // 1-6
+    void setVectorSpan(uint8_t span); // 1-6
 
     // ---- Diagnostics (calibration / debugging) ----
-    uint16_t getRawCount(uint8_t sensor);     // low samples in the last window (0-500)
-    float    getRawFraction(uint8_t sensor);  // getRawCount / ABW_IR_SAMPLES_PER_WINDOW
-    float    getSmoothed(uint8_t sensor);     // smoothed strength 0-100
-    bool     isPinMapValid();                 // false = wrong board/variant; outputs stay "no ball"
+    uint16_t getRawCount(uint8_t sensor); // low samples in the last window (0-500)
+    float getRawFraction(uint8_t sensor); // getRawCount / ABW_IR_SAMPLES_PER_WINDOW
+    float getSmoothed(uint8_t sensor);    // smoothed strength 0-100
+    bool isPinMapValid();                 // false = wrong board/variant; outputs stay "no ball"
 
     // Called from the timer interrupt. Not for use in sketches.
     static void sampleFromISR();
@@ -133,10 +133,10 @@ private:
     uint16_t m_rawCounts[ABW_IR_SENSOR_COUNT] = {0};
     float m_smoothed[ABW_IR_SENSOR_COUNT] = {0};
 
-    uint8_t  m_directionSimple = ABW_IR_NO_BALL_DIRECTION;
-    uint8_t  m_strength = 0;
+    uint8_t m_directionSimple = ABW_IR_NO_BALL_DIRECTION;
+    uint8_t m_strength = 0;
     uint16_t m_directionAdvanced = ABW_IR_NO_BALL_ANGLE;
-    bool     m_ballDetected = false;
+    bool m_ballDetected = false;
 };
 
 #endif // ABW_IRRING_H

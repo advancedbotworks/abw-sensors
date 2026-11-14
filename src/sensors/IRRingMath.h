@@ -38,28 +38,28 @@
 #define ABW_IR_SENSOR_COUNT 12
 
 // ---- Output values ----
-#define ABW_IR_NO_BALL_DIRECTION 0     // simple direction when no ball
-#define ABW_IR_NO_BALL_ANGLE     450   // advanced direction when no ball
+#define ABW_IR_NO_BALL_DIRECTION 0   // simple direction when no ball
+#define ABW_IR_NO_BALL_ANGLE     450 // advanced direction when no ball
 
 namespace abw {
 
 enum IRDirectionMethod {
-    IR_DIRECTION_VECTOR_SUM,     // centroid of the receivers near the ball
-    IR_DIRECTION_INTERPOLATION   // v2-style neighbour interpolation
+    IR_DIRECTION_VECTOR_SUM,   // centroid of the receivers near the ball
+    IR_DIRECTION_INTERPOLATION // v2-style neighbour interpolation
 };
 
 struct IRRingSettings {
-    float strengthMax;              // 3-receiver average that reads as 100
-    float noBallThreshold;          // strength below this = no ball
+    float strengthMax;     // 3-receiver average that reads as 100
+    float noBallThreshold; // strength below this = no ball
     IRDirectionMethod method;
-    uint8_t vectorSpan;             // receivers each side of the strongest (1-6)
+    uint8_t vectorSpan; // receivers each side of the strongest (1-6)
 };
 
 struct IRRingOutputs {
-    uint8_t  directionSimple;       // 1-12, or ABW_IR_NO_BALL_DIRECTION
-    uint8_t  strength;              // 0-100
-    uint16_t directionAdvanced;     // 0-359, or ABW_IR_NO_BALL_ANGLE
-    bool     ballDetected;
+    uint8_t directionSimple;    // 1-12, or ABW_IR_NO_BALL_DIRECTION
+    uint8_t strength;           // 0-100
+    uint16_t directionAdvanced; // 0-359, or ABW_IR_NO_BALL_ANGLE
+    bool ballDetected;
 };
 
 // Raw low-sample count over one window -> 0-100, normalised by the measured
@@ -85,7 +85,7 @@ uint16_t irPositionToDegrees(float position);
 
 // All outputs from the smoothed per-receiver strengths.
 IRRingOutputs irCalculateOutputs(const float values[ABW_IR_SENSOR_COUNT],
-                                 const IRRingSettings& settings);
+                                 const IRRingSettings &settings);
 
 } // namespace abw
 

@@ -30,7 +30,7 @@ namespace abw {
 //   Advanced Bot Works IR Sensor Ring
 //   Firmware v3.0.0 (AdvancedBotWorks library), hardware v1.0
 //   Docs: https://docs.advancedbotworks.com
-void printInfoOnUsbConnect(const char* productName);
+void printInfoOnUsbConnect(const char *productName);
 
 } // namespace abw
 

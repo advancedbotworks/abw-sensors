@@ -44,12 +44,12 @@
 
 // ===========================================================================
 
-#define SENSOR_COUNT 3
+#define SENSOR_COUNT           3
 #define ABW_LASER_NO_TARGET    9999
 #define ABW_LASER_SENSOR_ERROR 65535
-#define ABW_LASER_STALE_MS     500   // no new reading for this long = error
+#define ABW_LASER_STALE_MS     500 // no new reading for this long = error
 
-const uint8_t xshutPins[SENSOR_COUNT] = {16, 14, 15};  // left, front, right
+const uint8_t xshutPins[SENSOR_COUNT] = {16, 14, 15}; // left, front, right
 
 uint16_t data[4] = {0};
 
@@ -74,8 +74,7 @@ static uint16_t toOutput(float mm) {
 #endif
 }
 
-void setup()
-{
+void setup() {
 #if ABW_LASER_DEBUG
     Serial.begin(115200);
 #endif
@@ -111,8 +110,7 @@ void setup()
     }
 }
 
-void loop()
-{
+void loop() {
     unsigned long now = millis();
 
     for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
@@ -122,14 +120,14 @@ void loop()
         }
 
         if (sensors[i].dataReady()) {
-            uint16_t mm = sensors[i].read(false);   // non-blocking
+            uint16_t mm = sensors[i].read(false); // non-blocking
             lastReadingMs[i] = now;
 
             if (sensors[i].timeoutOccurred()) {
                 data[i] = ABW_LASER_SENSOR_ERROR;
             } else if (!isValidRange(sensors[i].ranging_data.range_status)) {
                 data[i] = ABW_LASER_NO_TARGET;
-                hasReading[i] = false;   // restart smoothing on the next valid reading
+                hasReading[i] = false; // restart smoothing on the next valid reading
             } else {
                 if (!hasReading[i] || ABW_LASER_SMOOTHING_ALPHA >= 1.0f) {
                     smoothed[i] = mm;
@@ -148,12 +146,15 @@ void loop()
     static unsigned long lastPrintMs = 0;
     if (now - lastPrintMs >= 100) {
         lastPrintMs = now;
-        Serial.print("L ");  Serial.print(data[0]);
-        Serial.print("  F "); Serial.print(data[1]);
-        Serial.print("  R "); Serial.println(data[2]);
+        Serial.print("L ");
+        Serial.print(data[0]);
+        Serial.print("  F ");
+        Serial.print(data[1]);
+        Serial.print("  R ");
+        Serial.println(data[2]);
     }
 #endif
 
-    abw::printInfoOnUsbConnect("Laser Distance Sensor Array");   // version info for support (USB Serial Monitor)
+    abw::printInfoOnUsbConnect("Laser Distance Sensor Array"); // version info for support (USB Serial Monitor)
     hub.process();
 }

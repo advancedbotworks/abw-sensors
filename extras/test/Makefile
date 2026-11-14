@@ -28,7 +28,18 @@ run: $(BUILD)/test_irring_math $(BUILD)/test_lego_version check-version
 	./$(BUILD)/test_irring_math
 	./$(BUILD)/test_lego_version
 
+# Code formatting (clang-format 18, style in /.clang-format).
+# lego_uart.h is third-party (Pybricks) and kept as upstream.
+CLANG_FORMAT ?= clang-format
+FORMAT_FILES = $(shell cd ../.. && git ls-files 'src/*.h' 'src/*.cpp' 'examples/*.ino' 'extras/test/*.cpp' | grep -v 'src/core/lego_uart.h')
+
+format:
+	cd ../.. && $(CLANG_FORMAT) -i $(FORMAT_FILES)
+
+format-check:
+	cd ../.. && $(CLANG_FORMAT) --dry-run --Werror $(FORMAT_FILES) && echo "PASS formatting"
+
 clean:
 	rm -rf $(BUILD)
 
-.PHONY: all run clean check-version
+.PHONY: all run clean check-version format format-check

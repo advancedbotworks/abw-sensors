@@ -1,0 +1,26 @@
+# Code style for the AdvancedBotWorks library. Check with:
+#   make -C extras/test format-check      (CI runs this)
+# and apply with:
+#   make -C extras/test format
+BasedOnStyle: LLVM
+Language: Cpp
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 0                     # don't re-wrap lines; keep hand-made layout
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortBlocksOnASingleLine: Empty
+AlignConsecutiveMacros: Consecutive
+AlignTrailingComments: true
+AlignAfterOpenBracket: Align
+PointerAlignment: Right
+SortIncludes: Never                # include order matters for Arduino
+ReflowComments: false
+IndentPPDirectives: None
+SpaceAfterCStyleCast: false
+BreakBeforeBraces: Attach
+IndentCaseLabels: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2

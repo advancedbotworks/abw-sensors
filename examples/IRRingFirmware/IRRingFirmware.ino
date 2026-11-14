@@ -74,7 +74,7 @@ void loop() {
 
 #if ABW_IR_DEBUG
         static uint8_t windows = 0;
-        if (++windows >= 10) {   // print 10 times per second
+        if (++windows >= 10) { // print 10 times per second
             windows = 0;
             if (!irRing.isPinMapValid()) {
                 Serial.println("ERROR: receiver pin map doesn't match this board (expects Arduino NANO 33 IoT)");
@@ -100,6 +100,6 @@ void loop() {
         }
 #endif
     }
-    abw::printInfoOnUsbConnect("IR Sensor Ring");   // version info for support (USB Serial Monitor)
+    abw::printInfoOnUsbConnect("IR Sensor Ring"); // version info for support (USB Serial Monitor)
     hub.process();
 }

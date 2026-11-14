@@ -44,8 +44,8 @@
 #define COLOR_WHITE     10
 
 // CMD_EXT_MODE payload
-#define EXT_MODE_0      0x00  // for mode numbers < 8
-#define EXT_MODE_8      0x08  // for mode numbers >= 8
+#define EXT_MODE_0 0x00 // for mode numbers < 8
+#define EXT_MODE_8 0x08 // for mode numbers >= 8
 
 /**
  * @brief Handle the LegoUART protocol and define modes of the
@@ -93,15 +93,15 @@ class ColourSensor : public BaseSensor {
     // Pybricks uses modes 3, 5, 7 only
     // https://github.com/pybricks/pybricks-micropython/blob/master/pybricks/util_pb/pb_device.h
     enum {
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__COLOR = 0,  // read 1x int8_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__REFLT = 1,  // read 1x int8_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__AMBI  = 2,  // read 1x int8_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__LIGHT = 3,  // writ 3x int8_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__RREFL = 4,  // read 2x int16_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__RGB_I = 5,  // read 4x int16_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__HSV   = 6,  // read 3x int16_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__SHSV  = 7,  // read 4x int16_t
-        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__DEBUG = 8,  // ??   2x int16_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__COLOR = 0, // read 1x int8_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__REFLT = 1, // read 1x int8_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__AMBI = 2,  // read 1x int8_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__LIGHT = 3, // writ 3x int8_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__RREFL = 4, // read 2x int16_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__RGB_I = 5, // read 4x int16_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__HSV = 6,   // read 3x int16_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__SHSV = 7,  // read 4x int16_t
+        PBIO_IODEV_MODE_PUP_COLOR_SENSOR__DEBUG = 8, // ??   2x int16_t
         //PBIO_IODEV_MODE_PUP_COLOR_SENSOR__CALIB = 9,  // ??   7x int16_t
     };
 
@@ -114,7 +114,7 @@ public:
     void setSensorRGB_I(uint16_t *pData);
     void setSensorHSV(uint16_t *pData);
     void setSensorColor(uint8_t *pData);
-    void setLEDBrightnessesCallback(void(pfunc)(const uint8_t*));
+    void setLEDBrightnessesCallback(void(pfunc)(const uint8_t *));
     void setSensorReflectedLight(uint8_t *pData);
     void setSensorAmbientLight(uint8_t *pData);
 
@@ -139,15 +139,15 @@ private:
     void ackResetCombosMode();
     void ackSetCombosMode();
 
-    uint8_t  *m_sensorColor;
-    uint8_t  *m_reflectedLight;
-    uint8_t  *m_ambientLight;
-    uint8_t  *m_LEDBrightnesses;
+    uint8_t *m_sensorColor;
+    uint8_t *m_reflectedLight;
+    uint8_t *m_ambientLight;
+    uint8_t *m_LEDBrightnesses;
     uint16_t *m_sensorRGB_I;
     uint16_t *m_sensorHSV;
-    void     (*m_pLEDBrightnessesfunc)(const uint8_t*);
-    bool     m_defaultComboModesEnabled = true;
-    uint8_t  *m_defaultIntVal;
+    void (*m_pLEDBrightnessesfunc)(const uint8_t *);
+    bool m_defaultComboModesEnabled = true;
+    uint8_t *m_defaultIntVal;
 
     // UART protocol
     uint8_t m_currentExtMode = 0;
