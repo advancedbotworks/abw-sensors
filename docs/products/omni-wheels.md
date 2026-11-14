@@ -57,9 +57,20 @@ Rollers wear over time, especially on rough surfaces. The [80-pack of replacemen
 | Rollers per wheel | 20 | 14 |
 | Wheels one 80-pack can fully re-roll | 4 | 5 |
 
-### Replacing a roller
+### Replacing rollers
 
-TBC: step-by-step instructions with photos.
+The rollers sit on an inner ring (the loop) held between the front and back halves of the wheel. You'll need a small screwdriver that fits the wheel's screws.
+
+1. **Take the wheel off the robot.**
+2. **Remove all the screws** from the wheel and put them somewhere safe. They're small and easy to lose.
+3. **Separate the front and back halves.** The loop of rollers comes away with them.
+4. **Slide the old rollers off the loop** and slide the new ones on, until the loop has its full set (20 for the 80 mm wheel, 14 for the 56 mm wheel).
+5. **Put the loop back** between the two halves, with each roller sitting in its slot.
+6. **Refit the screws.** Tighten them evenly until snug, but don't overtighten them: the wheel is plastic.
+7. **Check each roller spins freely** before putting the wheel back on the robot. If one sticks, loosen the screws slightly and re-seat it.
+
+!!! tip
+    If one roller is worn, the others usually are too. Replacing a whole wheel's set at once keeps the grip even.
 
 ### Making rollers last longer
 
@@ -75,7 +86,8 @@ TBC: step-by-step instructions with photos.
 
 ## Still to confirm
 
-- [ ] Roller replacement steps and photos
+- [ ] Photos for the roller replacement steps
+- [ ] Screwdriver type and size for the wheel screws
 - [ ] Photo of each wheel mounted on a SPIKE Prime motor
 
 ---
