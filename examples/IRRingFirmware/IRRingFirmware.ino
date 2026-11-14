@@ -100,5 +100,6 @@ void loop() {
         }
 #endif
     }
+    abw::printInfoOnUsbConnect("IR Sensor Ring");   // version info for support (USB Serial Monitor)
     hub.process();
 }
