@@ -1,6 +1,9 @@
 # Laser Distance Sensor Array (v1)
 
-Three laser time-of-flight distance sensors, facing **left, forward and right** at 90° to each other. It gives your robot millimetre distance readings to walls and obstacles, for example in RoboCup Junior Rescue Maze or for positioning on a Soccer field.
+Three laser time-of-flight distance sensors, facing **left, forward and right** at 90° to each other. It gives your robot millimetre distance readings to walls and obstacles, for example for wall-following in RoboCup Junior Rescue Maze.
+
+!!! danger "Not permitted in RoboCup Junior Australia Soccer"
+    This sensor **emits infrared light**, so it is **not permitted in RoboCup Junior Australia Standard or Lightweight Soccer**. It's intended mainly for **Rescue Maze**. Rules change each year: always check the current rules for your league before using any sensor in competition.
 
 !!! info "At a glance"
     - **Measures:** distance to the nearest surface, in three directions

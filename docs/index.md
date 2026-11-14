@@ -9,7 +9,7 @@ Every ABW sensor plugs straight into a SPIKE Prime hub port and **shows up as a 
 | Product | What it measures | Docs |
 |---|---|---|
 | **IR Sensor Ring** (v1) | Direction and strength of a RoboCup IR ball, all the way around the robot | [IR Sensor Ring](products/ir-ring-v1.md) |
-| **Laser Distance Sensor Array** (v1) | Distance to walls on the left, front and right | [Laser Distance Sensor Array](products/laser-array-v1.md) |
+| **Laser Distance Sensor Array** (v1) | Distance to walls on the left, front and right (Rescue Maze; not permitted in RCJA Soccer) | [Laser Distance Sensor Array](products/laser-array-v1.md) |
 
 ## Where to start
 
