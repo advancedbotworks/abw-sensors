@@ -18,6 +18,12 @@ We're a small team in Brisbane and usually reply within a few business days.
 - [ ] Check the sensor shows up as a **Color Sensor** in the app's device view.
 - [ ] Read the troubleshooting tips on your product's page.
 
+## Ask the community
+
+For questions about setup, wiring or code, ask in [GitHub Discussions (Q&A)](https://github.com/advancedbotworks/abw-sensors/discussions/categories/q-a). Other teams can learn from the answer too. New firmware releases are also announced there.
+
+Please email us instead for anything about an order, and don't post order details publicly.
+
 ## Bugs and feature requests
 
 If you've found a bug in the firmware, or have an idea for it, you can also [open an issue on GitHub](https://github.com/advancedbotworks/abw-sensors/issues).

@@ -81,6 +81,7 @@ Every pull request is checked by GitHub Actions. It compiles both firmware sketc
 
 ## Contributing and support
 
+- **Questions:** ask in [Discussions (Q&A)](https://github.com/advancedbotworks/abw-sensors/discussions/categories/q-a).
 - **Bugs and ideas:** [open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). The forms ask for the product, firmware version and readings.
 - **Pull requests:** welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
 - **Orders, shipping or warranty:** email **support@advancedbotworks.com**. Please don't post order details on GitHub.

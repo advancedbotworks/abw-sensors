@@ -8,7 +8,7 @@ Everyone taking part is expected to follow our [Code of Conduct](CODE_OF_CONDUCT
 
 - **Bugs and feature ideas:** [open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). The forms ask for the product, firmware version and the values you're seeing.
 - **Orders, shipping, returns or warranty:** email **support@advancedbotworks.com**, not GitHub. Please don't post order details publicly.
-- **Setup and usage help:** start with the docs at **https://docs.advancedbotworks.com**.
+- **Setup and usage help:** start with the docs at **https://docs.advancedbotworks.com**, then ask in [Discussions (Q&A)](https://github.com/advancedbotworks/abw-sensors/discussions/categories/q-a) if you're still stuck.
 
 ## Changing the code
 
