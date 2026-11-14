@@ -2,6 +2,8 @@
 
 Thanks for helping improve the Advanced Bot Works sensors!
 
+Everyone taking part is expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Many of our users are school students, so please keep things friendly and respectful.
+
 ## Reporting problems and ideas
 
 - **Bugs and feature ideas:** [open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). The forms ask for the product, firmware version and the values you're seeing.
