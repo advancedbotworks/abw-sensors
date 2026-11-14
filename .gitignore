@@ -13,3 +13,4 @@ build/
 *.elf
 *.map
 site/
+extras/test/build/
