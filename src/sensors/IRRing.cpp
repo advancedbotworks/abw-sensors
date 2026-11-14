@@ -19,12 +19,12 @@
 #include "IRRing.h"
 
 #if !defined(ARDUINO_ARCH_SAMD)
-#error "IRRing uses the SAMD21 TC3 timer and only supports SAMD boards (Arduino NANO 33 IoT core)."
+#error "IRRing uses the TC3 timer and only supports the Arduino NANO 33 IoT board core."
 #endif
 
 namespace {
 
-// TSSP receiver -> Arduino pin (Nano 33 IoT numbering), receiver 1..12 in order.
+// IR receiver -> Arduino pin (Nano 33 IoT numbering), receiver 1..12 in order.
 const uint8_t kPins[ABW_IR_SENSOR_COUNT] = {17, 14, 20, 2, 10, 9, 8, 3, 6, 21, 15, 18};
 
 // The same receivers as GPIO port bits (from the Nano 33 IoT variant pin table).
@@ -110,7 +110,7 @@ void IRRing::sampleFromISR() {
 
 void IRRing::init() {
     for (uint8_t i = 0; i < ABW_IR_SENSOR_COUNT; i++) {
-        // TSSP outputs are open-collector; the pull-up is harmless if the
+        // Receiver outputs are open-collector; the pull-up is harmless if the
         // board already has one.
         pinMode(kPins[i], INPUT_PULLUP);
         s_accumulators[i] = 0;

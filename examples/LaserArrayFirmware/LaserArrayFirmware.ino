@@ -21,7 +21,7 @@
 
 // ============================== Settings ===================================
 
-// Distance mode (ST VL53L1X datasheet figures, white target):
+// Distance mode (sensor datasheet figures, white target):
 //   VL53L1X::Short   about 1.3 m, same in the dark and in bright light (default)
 //   VL53L1X::Medium  about 2.9 m in the dark, about 0.8 m in bright light
 //   VL53L1X::Long    about 3.6 m in the dark, about 0.7 m in bright light

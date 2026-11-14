@@ -8,7 +8,7 @@ on:
 
 jobs:
   compile:
-    name: Build for Nano 33 IoT (SAMD21)
+    name: Build firmware (Nano 33 IoT core)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

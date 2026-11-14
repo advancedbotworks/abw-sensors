@@ -68,8 +68,8 @@ A ring of 12 infrared receivers that tells your robot **which direction the Robo
 |---|---|
 | Supply | From the SPIKE hub port |
 | Current draw | TBC mA |
-| Microcontroller | Microchip ATSAMD21G18A (ARM Cortex-M0+, 48 MHz) |
-| IR receivers | 12 × Vishay TSSP77038 (38 kHz), 30° apart |
+| Microcontroller | 32-bit ARM microcontroller |
+| IR receivers | 12 × 38 kHz IR receivers, 30° apart |
 | USB | USB port on the board for firmware updates (see [Updating firmware](../firmware/updating.md)) |
 
 ### Performance
