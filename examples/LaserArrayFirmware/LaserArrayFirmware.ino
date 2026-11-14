@@ -154,5 +154,6 @@ void loop()
     }
 #endif
 
+    abw::printInfoOnUsbConnect("Laser Distance Sensor Array");   // version info for support (USB Serial Monitor)
     hub.process();
 }

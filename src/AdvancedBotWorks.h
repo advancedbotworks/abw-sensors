@@ -23,8 +23,14 @@
 #ifndef ABW_ADVANCEDBOTWORKS_H
 #define ABW_ADVANCEDBOTWORKS_H
 
+// Library version (ABW_VERSION, e.g. "3.0.0")
+#include "AdvancedBotWorksVersion.h"
+
 // Shared core: emulates a LEGO SPIKE Prime colour sensor
 #include "core/ColourSensor.h"
+
+// Prints product name + firmware version when a Serial Monitor connects
+#include "core/UsbInfo.h"
 
 // Sensor drivers
 #include "sensors/IRRing.h"

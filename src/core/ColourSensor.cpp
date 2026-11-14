@@ -23,6 +23,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "ColourSensor.h"
+#include "LegoVersion.h"
+#include "../AdvancedBotWorksVersion.h"
+
+static_assert(ABW_VERSION_MAJOR <= 9 && ABW_VERSION_MINOR <= 9 && ABW_VERSION_PATCH <= 99,
+              "LEGO CMD_VERSION fields are BCD: major/minor 0-9, patch 0-99");
 
 /**
  * @brief Default constructor
@@ -155,7 +160,14 @@ void ColourSensor::commSendInitSequence(){
     Serial1.write("\x40\x3D\x82", 3);                              // Type ID: 0x3D
     Serial1.write("\x51\x07\x07\x09\x00\xA7", 6);                  // CMD_MODES: 8 modes, 8 views, Ext. Modes: 10 modes, 1 view
     Serial1.write("\x52\x00\xC2\x01\x00\x6E", 6);                  // CMD_SPEED: 115200
-    Serial1.write("\x5F\x00\x00\x00\x10\x00\x00\x00\x10\xA0", 10); // CMD_VERSION: fw-version: 1.0.0.0, hw-version: 1.0.0.0
+    // CMD_VERSION: firmware = library version (ABW_VERSION), hardware = ABW_HARDWARE_VERSION.
+    // (Previously hard-coded as fw 1.0.0.0, hw 1.0.0.0.)
+    uint8_t versionMsg[abw::kLegoVersionMessageSize];
+    abw::buildLegoVersionMessage(
+        versionMsg,
+        abw::legoVersion(ABW_VERSION_MAJOR, ABW_VERSION_MINOR, ABW_VERSION_PATCH),
+        abw::legoVersion(ABW_HARDWARE_VERSION_MAJOR, ABW_HARDWARE_VERSION_MINOR, 0));
+    Serial1.write(versionMsg, abw::kLegoVersionMessageSize);
     Serial1.flush();
     delay(10);
     // Mode 9:

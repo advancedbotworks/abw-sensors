@@ -1,21 +1,34 @@
 # Host unit tests for the AdvancedBotWorks library (no Arduino needed).
-#   make -C extras/test        build and run
+#   make -C extras/test        build and run everything
 #   make -C extras/test clean
 CXX      ?= g++
 CXXFLAGS ?= -std=c++11 -O2 -Wall -Wextra -Werror
-SRC_DIR  := ../../src/sensors
+SRC      := ../../src
 BUILD    := build
+INCLUDES := -I$(SRC) -I$(SRC)/core -I$(SRC)/sensors
 
 all: run
 
-$(BUILD)/test_irring_math: test_irring_math.cpp $(SRC_DIR)/IRRingMath.cpp $(SRC_DIR)/IRRingMath.h
+$(BUILD)/test_irring_math: test_irring_math.cpp $(SRC)/sensors/IRRingMath.cpp $(SRC)/sensors/IRRingMath.h
 	@mkdir -p $(BUILD)
-	$(CXX) $(CXXFLAGS) -I$(SRC_DIR) -o $@ test_irring_math.cpp $(SRC_DIR)/IRRingMath.cpp -lm
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ test_irring_math.cpp $(SRC)/sensors/IRRingMath.cpp -lm
 
-run: $(BUILD)/test_irring_math
+$(BUILD)/test_lego_version: test_lego_version.cpp $(SRC)/core/LegoVersion.h $(SRC)/AdvancedBotWorksVersion.h
+	@mkdir -p $(BUILD)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ test_lego_version.cpp
+
+# library.properties version must match ABW_VERSION in AdvancedBotWorksVersion.h
+check-version:
+	@props=$$(sed -n 's/^version=//p' ../../library.properties); \
+	header=$$(sed -n 's/^#define ABW_VERSION[[:space:]]*"\(.*\)".*/\1/p' $(SRC)/AdvancedBotWorksVersion.h); \
+	if [ "$$props" = "$$header" ]; then echo "PASS version_matches ($$props)"; \
+	else echo "FAIL version mismatch: library.properties=$$props, AdvancedBotWorksVersion.h=$$header"; exit 1; fi
+
+run: $(BUILD)/test_irring_math $(BUILD)/test_lego_version check-version
 	./$(BUILD)/test_irring_math
+	./$(BUILD)/test_lego_version
 
 clean:
 	rm -rf $(BUILD)
 
-.PHONY: all run clean
+.PHONY: all run clean check-version
