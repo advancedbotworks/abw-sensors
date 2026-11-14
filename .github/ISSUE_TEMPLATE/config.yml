@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask a question
+    url: https://github.com/advancedbotworks/abw-sensors/discussions/categories/q-a
+    about: Questions about setup, wiring or code. Ask in Discussions (Q&A) rather than opening an issue.
   - name: Documentation and setup help
     url: https://docs.advancedbotworks.com
     about: How to connect and use the sensors, what each channel means, and how to update firmware.
