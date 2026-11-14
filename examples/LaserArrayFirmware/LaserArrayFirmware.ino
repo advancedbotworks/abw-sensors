@@ -1,5 +1,19 @@
+/*
+ * Laser Distance Sensor Array firmware - Advanced Bot Works
+ * Copyright (C) 2025-2026 Aparaj Bogahawatta
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * This is the firmware loaded onto every Laser Distance Sensor Array before
+ * shipping. The sensor appears to the SPIKE Prime hub as a colour sensor:
+ *   Red   = left distance (mm)
+ *   Green = front distance (mm)
+ *   Blue  = right distance (mm)
+ *
+ * Requires Pololu's VL53L1X library (installed automatically by the
+ * Arduino Library Manager as a dependency).
+ */
 #include <VL53L1X.h>
-#include <Colour_Sensor.h>
+#include <AdvancedBotWorks.h>
 
 #define SENSOR_COUNT 3
 #define CENTIMETRES false
@@ -7,12 +21,12 @@
 const uint8_t xshutPins[SENSOR_COUNT] = {16, 14, 15};
 uint16_t data[4] = {0};
 
-Colour_Sensor Nano;
+ColourSensor hub;
 VL53L1X sensors[SENSOR_COUNT];
 
 void setup()
 {
-    Nano.setSensorRGB_I(data);
+    hub.setSensorRGB_I(data);
     Wire.begin();
     Wire.setClock(400000);
 
@@ -44,5 +58,5 @@ void loop()
             data[i] = sensors[i].read();
         #endif
     }
-    Nano.process();
+    hub.process();
 }
