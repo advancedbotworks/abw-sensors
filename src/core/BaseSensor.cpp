@@ -102,7 +102,8 @@ void BaseSensor::commWaitForHubIdle() {
  */
 void BaseSensor::connectToHub() {
     // Wait for HUB to idle it's TX pin (idle = High)
-    // TODO: ces bidouilles émettent b'\x00\x00' avant tout choses sur la ligne série !!
+    // TODO (from MyOwnBricks, translated): this manual pin handling emits
+    // b'\x00\x00' on the serial line before anything else.
     commWaitForHubIdle();
 
     // Starting initialization sequence
@@ -222,7 +223,7 @@ void BaseSensor::parseHeader(const uint8_t &header, uint8_t &mode, uint8_t &msg_
  */
 uint8_t BaseSensor::getMsgSize(const uint8_t &header) {
     // Simplified version that implicitly asserts that msg_type is LUMP_MSG_TYPE_DATA
-    return _(uint8_t)((1 << (((header) >> 3) & 0x7)) + 2);
+    return static_cast<uint8_t>((1 << (((header) >> 3) & 0x7)) + 2);
 }
 
 

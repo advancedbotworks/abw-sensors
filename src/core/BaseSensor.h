@@ -30,12 +30,25 @@
 #include "lego_uart.h"
 #include <Arduino.h>
 
-#define _(type) static_cast<type>
-
 
 /**
  * @brief Handle basic functions for LegoUART protocol.
  *      Designed to be inherited in specific classes of sensors.
+ *
+ * How a connection to the hub works (call process() every loop()):
+ *   1. Not connected: process() calls connectToHub(), which
+ *      - waits for the hub's TX line to stay idle (high) for 100 ms
+ *        (commWaitForHubIdle(); this waits as long as it takes),
+ *      - sends the device's description at 2400 baud
+ *        (commSendInitSequence(): type ID, modes, speed, version, ...),
+ *      - waits up to 2 s for the hub's ACK, then switches to 115200 baud.
+ *   2. Connected: process() calls handleModes(), which answers the hub's
+ *      mode selections and keep-alive messages and sends sensor data.
+ *   3. If the hub goes quiet for more than 200 ms (e.g. unplugged),
+ *      m_connected is cleared and the next process() starts again at 1.
+ *
+ * Note for ABW firmware: step 1 blocks loop() while no hub is connected,
+ * so anything else in loop() only runs between connection attempts.
  *
  * @param m_connSerialRX_pin Serial RX pin of the board. (default: 0).
  * @param m_connSerialTX_pin Serial TX pin of the board. (default: 1).
