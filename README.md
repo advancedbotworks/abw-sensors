@@ -1,70 +1,94 @@
-# Advanced Bot Works' Sensors
+# AdvancedBotWorks: firmware for Advanced Bot Works sensors
 
-## Summary
+[![Compile firmware](https://github.com/advancedbotworks/abw-sensors/actions/workflows/compile.yml/badge.svg)](https://github.com/advancedbotworks/abw-sensors/actions/workflows/compile.yml)
+[![Unit tests](https://github.com/advancedbotworks/abw-sensors/actions/workflows/tests.yml/badge.svg)](https://github.com/advancedbotworks/abw-sensors/actions/workflows/tests.yml)
+[![Docs](https://img.shields.io/badge/docs-docs.advancedbotworks.com-blue)](https://docs.advancedbotworks.com)
+[![Licence: GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-green)](LICENSE)
 
-This is a library is utilised by all of the sensors manufactured by [Advanced Bot Works](https://advancedbotworks.com). As per the description on our website, we have open-sourced all of the code the runs on the sensors. The program that runs on the Sensors can be found in this library and may be edited to help with specific scenarios.  The chips in all of the sensors emulate a Spike Prime Colour Sensor and send relevant data across the RED, Green and Blue (RGB) channels.
+The open-source Arduino library that runs on every [Advanced Bot Works](https://advancedbotworks.com) sensor for **LEGO® SPIKE™ Prime**. Each sensor appears to the hub as a SPIKE colour sensor and sends its data on the **red, green and blue** channels (plus a 4th "intensity" value), so teams can use it from Word Blocks, Python or Pybricks with no extra software.
 
-The code that runs on each sensor can be found in the "examples" folder.
+> **Using a sensor in your robot?** You don't need anything from this repository. Head to **[docs.advancedbotworks.com](https://docs.advancedbotworks.com)** for setup, channel tables and example code.
 
+## Products
 
-## Supported Platforms
+| Product | Firmware | Docs |
+|---|---|---|
+| **IR Sensor Ring**: direction and strength of the RoboCup Junior Soccer IR ball, all the way around the robot | [`IRRingFirmware`](examples/IRRingFirmware) | [IR Sensor Ring](https://docs.advancedbotworks.com/products/ir-ring-v1/) |
+| **Laser Distance Sensor Array**: millimetre distances to walls on the left, front and right, for Rescue Maze | [`LaserArrayFirmware`](examples/LaserArrayFirmware) | [Laser Distance Sensor Array](https://docs.advancedbotworks.com/products/laser-array-v1/) |
 
-This library is designed to work with Arduino IDE versions 2.3.x or later. Testing has not been done on older versions. The sensors are designed to work with LEGO Spike Prime platforms only.
+The sketches in [`examples/`](examples) are the exact firmware loaded onto each sensor before shipping.
 
-## Getting Started
+## Versions
 
-Advanced Bot Works sensors can be purchased from the [Advanced Bot Works](https://advancedbotworks.com) website. Please read through product descriptions carefully before purchasing to ensure you are not disappointed.
+| | Version | Notes |
+|---|---|---|
+| **Latest release** | [**v2.0.0**](https://github.com/advancedbotworks/abw-sensors/releases/latest) | The firmware on all sensors sold so far. Use this to update or restore a sensor: see [Updating firmware](https://docs.advancedbotworks.com/firmware/updating/) |
+| **`main` branch** | v3.0.0 (in development) | Faster, smoother IR sampling (100 Hz), a configurable laser distance mode, and real version reporting. **Changes what some channels report** (e.g. IR advanced direction = 450 when no ball). See the [changelog](https://docs.advancedbotworks.com/changelog/) |
 
-A LEGO Spike Prime Hub will be required to connect to the sensor using the cable that is included in the package.
+Releases include **prebuilt firmware files** (`.bin`/`.hex`) for each sensor, with checksums.
 
-From there you can use the [online](https://spike.legoeducation.com/prime/lobby/) version of Spike Prime to program the Spike. Start a new project, When the Spike Hub is connected to your computer, it will appear as a Colour Sensor. From there, you can click the drop down next to the Sensor to see the "Red", "Green" and "Blue" values. These values correspond to what is on the [Advanced Bot Works](https://advancedbotworks.com) website.
+## For developers
 
-Alternatively, download the LEGO Education SPIKE™ App which will have the same interface.
+### Repository layout
 
-## Software
+```
+src/
+├── AdvancedBotWorks.h          # include this
+├── AdvancedBotWorksVersion.h   # ABW_VERSION
+├── core/                       # makes the board look like a SPIKE colour sensor to the hub
+└── sensors/                    # sensor drivers (IRRing + the hardware-free IRRingMath)
+examples/                       # the shipped firmware for each product
+extras/test/                    # unit tests that run on a computer
+docs/                           # source of docs.advancedbotworks.com (MkDocs)
+```
 
-If you are using version 2.3.4 or later of the [Arduino software (IDE)](http://www.arduino.cc/en/Main/Software), you can use the Library Manager to install this library:
+### Building the firmware (v3 / `main`)
 
-1. Download the [latest release archive from GitHub](https://github.com/advancedbotworks/abw-sensors) as a .ZIP file.
-2. In the Arduino IDE, open the "Sketch" menu, select "Include Library", then "Add .ZIP Library...".
-3. Navigate your file explorer to where the downloaded ZIP file is stored and select it.
-4. Follow any further prompts given.
+1. Install the [Arduino IDE](https://www.arduino.cc/en/software) 2.3.4+ and, in the Boards Manager, **Arduino SAMD Boards**.
+2. Put this repository in your Arduino `libraries` folder as a folder named **`AdvancedBotWorks`** (e.g. `git clone https://github.com/advancedbotworks/abw-sensors.git AdvancedBotWorks`).
+3. Install the Laser Array's driver dependency from the Library Manager: **VL53L1X** by Pololu.
+4. Select the board **Arduino NANO 33 IoT**, open **File → Examples → AdvancedBotWorks**, and upload.
 
-If this does not work, you can manually install the library:
+Each firmware sketch has a **Settings** block at the top: calibration values, smoothing, laser distance mode and a **debug mode** that prints readings over USB. When a Serial Monitor connects, the sensor prints its product name and firmware version.
 
-1. Download the [latest release archive from GitHub](https://github.com/advancedbotworks/abw-sensors) as a .ZIP file and decompress it.
-2. Rename the folder "abw-sensors-main" to "AdvancedBotWorks".
-3. Move the "AdvancedBotWorks" folder into the "libraries" directory inside your Arduino sketchbook directory.  You can view your sketchbook location by opening the "File" menu and selecting "Preferences" in the Arduino IDE.  If there is not already a "libraries" folder in that location, you should make the folder yourself.
-4. After installing the library, restart the Arduino IDE.
-
-## Examples
-
-Several example sketches are available that show how to use the library. You can access them from the Arduino IDE by opening the "File" menu, selecting "Examples", and then selecting "AdvancedBotWorks". If you cannot find these examples, the library was probably installed incorrectly and you should retry the installation instructions above.
-
-Each example corresponds to the actual code uploaded on all the relevant sensor before shipping. Feel free to read through the code to understand how the calculations are performed.
-
-## Using the library
-
-Include everything with a single header:
+Minimal use of the library:
 
 ```cpp
 #include <AdvancedBotWorks.h>
+
+ColourSensor hub;
+uint16_t data[4];          // R, G, B, I as seen by the hub
+
+void setup() { hub.setSensorRGB_I(data); }
+
+void loop() {
+    data[0] = 123;         // ...your sensor values...
+    hub.process();         // talk to the hub
+}
 ```
 
-The Laser Distance Sensor Array firmware also needs Pololu's [VL53L1X](https://github.com/pololu/vl53l1x-arduino) library. The Arduino Library Manager installs it automatically. If you install from a ZIP, install it yourself from the Library Manager.
+More in the [developer guide](https://docs.advancedbotworks.com/firmware/library/) and [how the sensors talk to the hub](https://docs.advancedbotworks.com/firmware/protocol/).
 
-## Version History
+### Tests, formatting and CI
 
-* 3.0.0 (unreleased): Restructured the library (`src/core`, `src/sensors`). Renamed classes and methods to Arduino conventions (`ColourSensor`, `IRRing`, `getDirectionSimple()`, ...) and added a single include, `AdvancedBotWorks.h`. Renamed the library from `Advanced_Bot_Works_Sensors` to `AdvancedBotWorks`. The laser sensor driver is now a library dependency instead of a bundled copy. Added third-party licence notices and CI. IR Ring: timer-interrupt sampling at 100 Hz with smoothing, and advanced direction = 450 when no ball. Laser Array: Short distance mode by default at 30 Hz, with no-target/error values. **Breaking:** sketches written for 2.x need the new names, and robot code that treats advanced direction 0 as "no ball" must check for 450.
-* 2.0.0 (2025-03-07): Added LRF Module to the library.
-* 1.0.0 (2024-06-04): Original Release for IR Ring found [here](https://github.com/advancedbotworks/abw-ir-ring) (archived)
+```sh
+make -C extras/test               # unit tests (IR maths, version message) + version check
+make -C extras/test format        # apply clang-format 18 (pip install clang-format==18.1.8)
+make -C extras/test format-check  # what CI checks
+```
+
+Every pull request is checked by GitHub Actions. It compiles both firmware sketches, runs Arduino Lint, the unit tests and the format check, and builds the docs when they change. `main` only accepts changes through pull requests that pass these checks.
 
 ## Contributing and support
 
-Found a bug or have an idea? [Open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). See [CONTRIBUTING.md](CONTRIBUTING.md) for pull requests. For orders, shipping or warranty, email support@advancedbotworks.com.
+- **Bugs and ideas:** [open an issue](https://github.com/advancedbotworks/abw-sensors/issues/new/choose). The forms ask for the product, firmware version and readings.
+- **Pull requests:** welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
+- **Orders, shipping or warranty:** email **support@advancedbotworks.com**. Please don't post order details on GitHub.
 
 ## Licence
 
-Copyright (C) 2024-2026 Aparaj Bogahawatta.
+Copyright © 2024–2026 Aparaj Bogahawatta.
 
-This library is free software, released under the [GNU General Public License v3.0 or later](LICENSE). Parts of it are based on [MyOwnBricks](https://github.com/ysard/MyOwnBricks) (GPL-3.0-or-later) and [Pybricks](https://github.com/pybricks/pybricks-micropython) (MIT). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the full credits and licences.
+Free software under the [GNU General Public License v3.0 or later](LICENSE). Parts are based on [MyOwnBricks](https://github.com/ysard/MyOwnBricks) (GPL-3.0-or-later) and [Pybricks](https://github.com/pybricks/pybricks-micropython) (MIT), and the Laser Array firmware uses a third-party driver library (BSD-3-Clause). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full credits and licence texts.
+
+<sub>LEGO® and SPIKE™ are trademarks of the LEGO Group, which does not sponsor or endorse this project.</sub>
