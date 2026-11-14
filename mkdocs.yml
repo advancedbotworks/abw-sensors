@@ -1,0 +1,63 @@
+site_name: Advanced Bot Works Docs
+site_url: https://docs.advancedbotworks.com/
+site_description: Documentation for Advanced Bot Works sensors for LEGO SPIKE Prime and RoboCup Junior.
+repo_url: https://github.com/advancedbotworks/abw-sensors
+repo_name: advancedbotworks/abw-sensors
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2024-2026 Advanced Bot Works. LEGO® and SPIKE™ are trademarks of the LEGO Group, which does not sponsor or endorse this site.
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Products:
+      - IR Sensor Ring (v1): products/ir-ring-v1.md
+      - Laser Distance Sensor Array (v1): products/laser-array-v1.md
+  - Firmware:
+      - Updating firmware: firmware/updating.md
+      - Library for developers: firmware/library.md
+      - How the sensors talk to the hub: firmware/protocol.md
+  - Support: support.md
+  - Licences: licences.md
+  - Changelog: changelog.md
+
+exclude_docs: |
+  templates/
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true

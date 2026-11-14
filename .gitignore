@@ -12,3 +12,4 @@ build/
 *.hex
 *.elf
 *.map
+site/
