@@ -15,7 +15,7 @@ Download and install the **Arduino IDE 2.3.4 or later** from [arduino.cc/en/soft
 ## 2. Install the board support
 
 1. Open **Tools → Board → Boards Manager**.
-2. Search for **Arduino SAMD Boards (32-bits ARM Cortex-M0+)** and click **Install**.
+2. Search for **Arduino SAMD Boards** and click **Install**.
 
 ## 3. Install the library and upload
 

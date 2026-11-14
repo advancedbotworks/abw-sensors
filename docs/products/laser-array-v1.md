@@ -45,9 +45,9 @@ What the channels mean depends on the **firmware version** on your sensor. See [
     No special values: when nothing is in range, the sensor reports whatever reading it gets. If a sensor fails to start, the whole array stops responding.
 
 !!! note "How far it can see depends on the mode, the light and the surface"
-    **Firmware v3.0.0** uses the VL53L1X's **Short distance mode** by default: about **1.3 m in any lighting**, the most predictable choice for Rescue Maze. Advanced users can change the mode in the firmware (`ABW_LASER_DISTANCE_MODE`). **Firmware v2.0.0** uses **Long distance mode**.
+    **Firmware v3.0.0** uses the sensors' **Short distance mode** by default: about **1.3 m in any lighting**, the most predictable choice for Rescue Maze. Advanced users can change the mode in the firmware (`ABW_LASER_DISTANCE_MODE`). **Firmware v2.0.0** uses **Long distance mode**.
 
-    ST's datasheet figures (white target, 100 ms timing budget):
+    Datasheet figures (white target, 100 ms timing budget):
 
     | Mode | Dark | Bright ambient light |
     |---|---|---|
@@ -107,9 +107,9 @@ What the channels mean depends on the **firmware version** on your sensor. See [
 | | |
 |---|---|
 | Supply | From the SPIKE hub port |
-| Current draw | TBC (measured). The three VL53L1X sensors alone draw about 48 mA typical while ranging (16 mA each, ST datasheet) |
-| Microcontroller | Microchip ATSAMD21G18A (ARM Cortex-M0+, 48 MHz) |
-| Distance sensors | 3 × ST VL53L1X time-of-flight laser sensors (940 nm, Class 1 laser, eye-safe) |
+| Current draw | TBC (measured). The three laser sensors alone draw about 48 mA typical while ranging (16 mA each, datasheet) |
+| Microcontroller | 32-bit ARM microcontroller |
+| Distance sensors | 3 × laser time-of-flight sensors (940 nm, Class 1 laser, eye-safe) |
 | USB | USB port on the board for firmware updates (see [Updating firmware](../firmware/updating.md)) |
 
 ### Performance
@@ -119,9 +119,9 @@ What the channels mean depends on the **firmware version** on your sensor. See [
     | | |
     |---|---|
     | Distance mode | Short (default), configurable in firmware |
-    | Range (ST datasheet, Short mode) | About 1.3 m in any lighting |
+    | Range (datasheet, Short mode) | About 1.3 m in any lighting |
     | Minimum distance | 4 cm |
-    | Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
+    | Ranging error (datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
     | Resolution | 1 mm |
     | Field of view | 27° cone per sensor |
     | Update rate | 30 Hz per sensor (33 ms timing budget) |
@@ -131,9 +131,9 @@ What the channels mean depends on the **firmware version** on your sensor. See [
     | | |
     |---|---|
     | Distance mode | Long |
-    | Range (ST datasheet, Long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light |
+    | Range (datasheet, Long mode) | Up to 360 cm in the dark (white target); about 70 cm in bright ambient light |
     | Minimum distance | 4 cm |
-    | Ranging error (ST datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
+    | Ranging error (datasheet) | ±20 mm (dark), ±25 mm (ambient light) |
     | Resolution | 1 mm |
     | Field of view | 27° cone per sensor |
     | Update rate | About 20 Hz per sensor |
@@ -150,7 +150,7 @@ The array fits the LEGO® stud/pin grid. Mount it so that nothing on the robot b
 
 ## Firmware
 
-- **Runs:** `LaserArrayFirmware` from the [AdvancedBotWorks library](../firmware/library.md), which uses Pololu's VL53L1X library
+- **Runs:** `LaserArrayFirmware` from the [AdvancedBotWorks library](../firmware/library.md), which uses a third-party laser sensor driver (credited under [Licences](../licences.md))
 - **Which version do I have?** See [Firmware versions](../firmware/versions.md)
 - **Source:** [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors), open source under the GPL-3.0. Third-party licences are listed under [Licences](../licences.md)
 - **Updates:** [Updating firmware](../firmware/updating.md)
