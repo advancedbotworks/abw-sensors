@@ -5,7 +5,7 @@
 The firmware on every Advanced Bot Works sensor is **free and open source**, licensed under the **[GNU General Public License v3.0 or later](https://github.com/advancedbotworks/abw-sensors/blob/main/LICENSE)**.
 
 - **Source code:** [github.com/advancedbotworks/abw-sensors](https://github.com/advancedbotworks/abw-sensors)
-- Each release is tagged, so you can find the exact source for the firmware version on your sensor.
+- **Releases:** [github.com/advancedbotworks/abw-sensors/releases](https://github.com/advancedbotworks/abw-sensors/releases). Each release is tagged, so you can find the exact source for the firmware version on your sensor. Sensors sold so far run **v2.0.0**.
 
 You're free to study, change and share the firmware under the terms of the GPL.
 
