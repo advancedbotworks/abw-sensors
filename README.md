@@ -56,7 +56,7 @@ The Laser Distance Sensor Array firmware also needs Pololu's [VL53L1X](https://g
 
 ## Version History
 
-* 3.0.0 (unreleased): Restructured the library (`src/core`, `src/sensors`). Renamed classes and methods to Arduino conventions (`ColourSensor`, `IRRing`, `getDirectionSimple()`, ...) and added a single include, `AdvancedBotWorks.h`. Renamed the library from `Advanced_Bot_Works_Sensors` to `AdvancedBotWorks`. Pololu's VL53L1X driver is now a dependency instead of a bundled copy. Added third-party licence notices and CI. **Breaking:** sketches written for 2.x need the new names.
+* 3.0.0 (unreleased): Restructured the library (`src/core`, `src/sensors`). Renamed classes and methods to Arduino conventions (`ColourSensor`, `IRRing`, `getDirectionSimple()`, ...) and added a single include, `AdvancedBotWorks.h`. Renamed the library from `Advanced_Bot_Works_Sensors` to `AdvancedBotWorks`. Pololu's VL53L1X driver is now a dependency instead of a bundled copy. Added third-party licence notices and CI. IR Ring: timer-interrupt sampling at 100 Hz with smoothing, and advanced direction = 450 when no ball. Laser Array: Short distance mode by default at 30 Hz, with no-target/error values. **Breaking:** sketches written for 2.x need the new names, and robot code that treats advanced direction 0 as "no ball" must check for 450.
 * 2.0.0 (2025-03-07): Added LRF Module to the library.
 * 1.0.0 (2024-06-04): Original Release for IR Ring found [here](https://github.com/advancedbotworks/abw-ir-ring) (archived)
 

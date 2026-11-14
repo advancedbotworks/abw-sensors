@@ -4,7 +4,15 @@ Firmware library versions. Each release's source code is on [GitHub](https://git
 
 ## 3.0.0 (unreleased)
 
-**For teams:** no change to how the sensors behave or what the R/G/B channels mean.
+**For teams (behaviour changes):**
+
+- **IR Sensor Ring:**
+    - **Advanced direction (blue) is now 450 when no ball is detected** (it was 0, which is also a valid angle). Simple direction (red) is still 0 for no ball.
+    - Rebuilt sampling: all 12 receivers are read together by a timer interrupt, and values update **100 times per second** with smoothing, so readings are steadier and more consistent.
+    - Tuned for the RoboCup Junior IR golf ball (40 kHz, 8 pulses per burst at 1.2 kHz).
+- **Laser Distance Sensor Array:**
+    - Now uses the VL53L1X's **Short distance mode by default** (about 1.3 m in any lighting), at **30 readings per second** (previously Long mode at about 20 per second).
+    - **9999** means no target in range; **65535** means a sensor error.
 
 **For developers (breaking):**
 
