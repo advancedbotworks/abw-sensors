@@ -1,6 +1,6 @@
 # Advanced Bot Works documentation
 
-Advanced Bot Works designs, builds and tests sensors for **RoboCup Junior** teams using **LEGO® SPIKE™ Prime**. Everything is made in Brisbane, Queensland, by former RoboCup competitors.
+Advanced Bot Works designs, builds and tests sensors and parts for **RoboCup Junior** teams using **LEGO® SPIKE™ Prime**. Everything is made in Brisbane, Queensland, by former RoboCup competitors.
 
 Every ABW sensor plugs straight into a SPIKE Prime hub port and **shows up as a SPIKE colour sensor**. The sensor's data comes through on the colour sensor's **red, green and blue** channels, so you can read it from Word Blocks or Python with no extra software.
 
@@ -10,6 +10,7 @@ Every ABW sensor plugs straight into a SPIKE Prime hub port and **shows up as a 
 |---|---|---|
 | **IR Sensor Ring** (v1) | Direction and strength of a RoboCup IR ball, all the way around the robot | [IR Sensor Ring](products/ir-ring-v1.md) |
 | **Laser Distance Sensor Array** (v1) | Distance to walls on the left, front and right (Rescue Maze; not permitted in RCJA Soccer) | [Laser Distance Sensor Array](products/laser-array-v1.md) |
+| **Omni-Wheels** (80 mm and 56 mm) and **Replacement Rollers** | Not a sensor: wheels for robots that drive in any direction | [Omni-Wheels and Rollers](products/omni-wheels.md) |
 
 ## Where to start
 
