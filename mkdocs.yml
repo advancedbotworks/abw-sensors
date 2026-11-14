@@ -38,6 +38,7 @@ nav:
   - Products:
       - IR Sensor Ring (v1): products/ir-ring-v1.md
       - Laser Distance Sensor Array (v1): products/laser-array-v1.md
+      - Omni-Wheels and Rollers: products/omni-wheels.md
   - Firmware:
       - Updating firmware: firmware/updating.md
       - Library for developers: firmware/library.md
