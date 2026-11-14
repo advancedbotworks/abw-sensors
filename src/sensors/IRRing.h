@@ -20,6 +20,7 @@
 #define ABW_IRRING_H
 
 #include <Arduino.h>
+#include "IRRingMath.h"   // ABW_IR_SENSOR_COUNT, output values, the maths
 
 /*
  * IR Sensor Ring driver: 12 x Vishay TSSP77038 receivers, 30 degrees apart.
@@ -55,8 +56,6 @@
  * libraries or pins that also need TC3 in the same sketch.
  */
 
-#define ABW_IR_SENSOR_COUNT 12
-
 // ---- Timing (derived from the ball specification, see above) ----
 // Sample period: <= t_on / 10 so each 200 us burst gets ~10 samples.
 #define ABW_IR_SAMPLE_PERIOD_US 20
@@ -80,16 +79,12 @@
 // (1-6; 6 = whole ring). Limiting it ignores far-side reflections/noise.
 #define ABW_IR_DEFAULT_VECTOR_SPAN 2
 
-// ---- Output values ----
-#define ABW_IR_NO_BALL_DIRECTION 0     // simple direction when no ball
-#define ABW_IR_NO_BALL_ANGLE     450   // advanced direction when no ball
-
 
 class IRRing {
 public:
     enum DirectionMethod {
-        DIRECTION_VECTOR_SUM,     // centroid of nearby receivers (default)
-        DIRECTION_INTERPOLATION   // v2-style neighbour interpolation
+        DIRECTION_VECTOR_SUM = abw::IR_DIRECTION_VECTOR_SUM,       // centroid of nearby receivers (default)
+        DIRECTION_INTERPOLATION = abw::IR_DIRECTION_INTERPOLATION  // v2-style neighbour interpolation
     };
 
     IRRing() {}
@@ -126,15 +121,14 @@ public:
 
 private:
     void calculateOutputs();
-    float directionVectorSum(uint8_t best);
-    float directionInterpolation(uint8_t best, float bestValue);
 
     float m_dutyMax = ABW_IR_DEFAULT_DUTY_MAX;
     float m_alpha = ABW_IR_DEFAULT_SMOOTHING;
-    float m_noBallThreshold = ABW_IR_DEFAULT_NO_BALL_THRESHOLD;
-    float m_strengthMax = ABW_IR_DEFAULT_STRENGTH_MAX;
-    DirectionMethod m_directionMethod = DIRECTION_VECTOR_SUM;
-    uint8_t m_vectorSpan = ABW_IR_DEFAULT_VECTOR_SPAN;
+    abw::IRRingSettings m_settings = {
+        ABW_IR_DEFAULT_STRENGTH_MAX,
+        ABW_IR_DEFAULT_NO_BALL_THRESHOLD,
+        abw::IR_DIRECTION_VECTOR_SUM,
+        ABW_IR_DEFAULT_VECTOR_SPAN};
 
     uint16_t m_rawCounts[ABW_IR_SENSOR_COUNT] = {0};
     float m_smoothed[ABW_IR_SENSOR_COUNT] = {0};

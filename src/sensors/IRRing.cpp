@@ -147,13 +147,11 @@ bool IRRing::update() {
     }
 
     for (uint8_t i = 0; i < ABW_IR_SENSOR_COUNT; i++) {
-        // Fraction of the window the output was low (0 .. ~D), normalised to
-        // 0-100 by the measured duty ceiling, then smoothed.
-        float fraction = (float)m_rawCounts[i] / ABW_IR_SAMPLES_PER_WINDOW;
-        float strength = 100.0f * fraction / m_dutyMax;
-        if (strength > 100.0f) strength = 100.0f;
-        if (strength < 0.0f)   strength = 0.0f;
-        m_smoothed[i] += m_alpha * (strength - m_smoothed[i]);
+        // Fraction of the window the output was low, normalised to 0-100 by
+        // the measured duty ceiling, then smoothed. (Maths in IRRingMath.cpp.)
+        const float strength =
+            abw::irCountToStrength(m_rawCounts[i], ABW_IR_SAMPLES_PER_WINDOW, m_dutyMax);
+        m_smoothed[i] = abw::irSmooth(m_smoothed[i], strength, m_alpha);
     }
 
     calculateOutputs();
@@ -161,99 +159,13 @@ bool IRRing::update() {
 }
 
 void IRRing::calculateOutputs() {
-    const uint8_t n = ABW_IR_SENSOR_COUNT;
+    const abw::IRRingOutputs out = abw::irCalculateOutputs(m_smoothed, m_settings);
 
-    // Strongest receiver (first one wins a tie).
-    uint8_t best = 0;
-    for (uint8_t i = 1; i < n; i++) {
-        if (m_smoothed[i] > m_smoothed[best]) {
-            best = i;
-        }
-    }
-    const float bestValue = m_smoothed[best];
-
-    // Strength: average of the strongest receiver and the one each side.
-    // When the ball sits between two receivers one drops and the other
-    // rises, so this stays steady where the single maximum would dip.
-    const uint8_t left  = (best + n - 1) % n;
-    const uint8_t right = (best + 1) % n;
-    float strength = (m_smoothed[left] + bestValue + m_smoothed[right]) / 3.0f;
-    strength = 100.0f * strength / m_strengthMax;
-    if (strength > 100.0f) strength = 100.0f;
-
-    m_strength = (uint8_t)(strength + 0.5f);
-    m_ballDetected = s_pinMapOk && strength >= m_noBallThreshold;
-
-    if (!m_ballDetected) {
-        m_directionSimple = ABW_IR_NO_BALL_DIRECTION;
-        m_directionAdvanced = ABW_IR_NO_BALL_ANGLE;
-        return;
-    }
-
-    m_directionSimple = best + 1;
-
-    float position = (m_directionMethod == DIRECTION_VECTOR_SUM)
-                         ? directionVectorSum(best)
-                         : directionInterpolation(best, bestValue);
-    while (position < 0.0f)       position += n;
-    while (position >= (float)n)  position -= n;
-
-    uint16_t angle = (uint16_t)(position * (360.0f / n) + 0.5f);
-    if (angle >= 360) angle -= 360;
-    m_directionAdvanced = angle;
-}
-
-// Returns the ball position in receivers (0 .. n), receiver i at i * 30 deg.
-float IRRing::directionVectorSum(uint8_t best) {
-    // Unit vectors for receivers 0..11 at 0, 30, ..., 330 degrees.
-    static const float kCos[ABW_IR_SENSOR_COUNT] = {
-        1.0f, 0.8660254f, 0.5f, 0.0f, -0.5f, -0.8660254f,
-        -1.0f, -0.8660254f, -0.5f, 0.0f, 0.5f, 0.8660254f};
-    static const float kSin[ABW_IR_SENSOR_COUNT] = {
-        0.0f, 0.5f, 0.8660254f, 1.0f, 0.8660254f, 0.5f,
-        0.0f, -0.5f, -0.8660254f, -1.0f, -0.8660254f, -0.5f};
-
-    const uint8_t n = ABW_IR_SENSOR_COUNT;
-    float x = 0.0f, y = 0.0f;
-
-    if (m_vectorSpan >= n / 2) {
-        // Whole ring.
-        for (uint8_t i = 0; i < n; i++) {
-            x += m_smoothed[i] * kCos[i];
-            y += m_smoothed[i] * kSin[i];
-        }
-    } else {
-        // Strongest receiver and m_vectorSpan neighbours each side.
-        for (int8_t k = -(int8_t)m_vectorSpan; k <= (int8_t)m_vectorSpan; k++) {
-            uint8_t i = (uint8_t)((best + n + k) % n);
-            x += m_smoothed[i] * kCos[i];
-            y += m_smoothed[i] * kSin[i];
-        }
-    }
-
-    // Vectors cancelled out (e.g. ball lighting opposite sides equally):
-    // fall back to the strongest receiver.
-    if (x * x + y * y < 1e-6f) {
-        return (float)best;
-    }
-
-    float degrees = atan2f(y, x) * (180.0f / PI);
-    return degrees / (360.0f / n);
-}
-
-// v2-style: shift from the strongest receiver towards whichever side is
-// stronger, using the neighbours one and two receivers away.
-float IRRing::directionInterpolation(uint8_t best, float bestValue) {
-    const uint8_t n = ABW_IR_SENSOR_COUNT;
-    const uint8_t lower1 = (best + n - 1) % n;
-    const uint8_t upper1 = (best + 1) % n;
-    const uint8_t lower2 = (best + n - 2) % n;
-    const uint8_t upper2 = (best + 2) % n;
-
-    float offset = ((m_smoothed[upper1] - m_smoothed[lower1]) +
-                    (m_smoothed[upper2] - m_smoothed[lower2]) / 2.0f) /
-                   (2.0f * bestValue);
-    return (float)best + offset;
+    m_strength = out.strength;
+    // Wrong board (pin map mismatch): never report a ball.
+    m_ballDetected = s_pinMapOk && out.ballDetected;
+    m_directionSimple = m_ballDetected ? out.directionSimple : ABW_IR_NO_BALL_DIRECTION;
+    m_directionAdvanced = m_ballDetected ? out.directionAdvanced : ABW_IR_NO_BALL_ANGLE;
 }
 
 uint8_t IRRing::getDirectionSimple()    { return m_directionSimple; }
@@ -270,19 +182,19 @@ void IRRing::setSmoothing(float alpha) {
 }
 
 void IRRing::setNoBallThreshold(float strength) {
-    if (strength >= 0.0f && strength <= 100.0f) m_noBallThreshold = strength;
+    if (strength >= 0.0f && strength <= 100.0f) m_settings.noBallThreshold = strength;
 }
 
 void IRRing::setStrengthMax(float average) {
-    if (average > 0.0f) m_strengthMax = average;
+    if (average > 0.0f) m_settings.strengthMax = average;
 }
 
 void IRRing::setDirectionMethod(DirectionMethod method) {
-    m_directionMethod = method;
+    m_settings.method = (abw::IRDirectionMethod)method;
 }
 
 void IRRing::setVectorSpan(uint8_t span) {
-    if (span >= 1 && span <= ABW_IR_SENSOR_COUNT / 2) m_vectorSpan = span;
+    if (span >= 1 && span <= ABW_IR_SENSOR_COUNT / 2) m_settings.vectorSpan = span;
 }
 
 uint16_t IRRing::getRawCount(uint8_t sensor) {
