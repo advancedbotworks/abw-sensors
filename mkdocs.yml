@@ -43,6 +43,7 @@ nav:
       - Updating firmware: firmware/updating.md
       - Library for developers: firmware/library.md
       - How the sensors talk to the hub: firmware/protocol.md
+  - FAQ and troubleshooting: faq.md
   - Support: support.md
   - Licences: licences.md
   - Changelog: changelog.md

@@ -13,6 +13,7 @@ We're a small team in Brisbane and usually reply within a few business days.
 
 ## Before you email
 
+- [ ] Check the [FAQ and troubleshooting](faq.md) page. Most problems are covered there.
 - [ ] Check that the sensor is plugged firmly into the hub port. Try a different port.
 - [ ] Restart the hub and reconnect it to the SPIKE app.
 - [ ] Check the sensor shows up as a **Color Sensor** in the app's device view.

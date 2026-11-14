@@ -17,7 +17,7 @@ Every ABW sensor plugs straight into a SPIKE Prime hub port and **shows up as a 
 - **New to ABW sensors?** Read [Getting started](getting-started.md).
 - **Need to update a sensor?** See [Updating firmware](firmware/updating.md).
 - **Want to see or change the code?** The firmware is open source. See [Library for developers](firmware/library.md).
-- **Something not working?** See [Support](support.md).
+- **Something not working?** Check the [FAQ and troubleshooting](faq.md), then see [Support](support.md).
 
 ## Shop
 
