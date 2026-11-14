@@ -6,8 +6,10 @@
  * This is the firmware loaded onto every IR Sensor Ring before shipping.
  * The sensor appears to the SPIKE Prime hub as a colour sensor:
  *   Red   = simple direction (1-12, 0 = no ball)
- *   Green = signal strength (0-100)
+ *   Green = signal strength (0-100): average of the strongest receiver and
+ *           its two neighbours
  *   Blue  = advanced direction (0-359 degrees, 450 = no ball)
+ *   4th   = ball detected (1) or not (0)  [the "intensity" value in rgbi()]
  *
  * Values update 100 times per second (see IRRing.h for how it works).
  */
@@ -24,6 +26,19 @@
 
 // Strength (0-100) below which the ball counts as not detected.
 #define ABW_IR_NO_BALL_THRESHOLD ABW_IR_DEFAULT_NO_BALL_THRESHOLD
+
+// Calibration: the strength reading with the ball point-blank on one
+// receiver (before scaling), so that point-blank reads 100.
+#define ABW_IR_STRENGTH_MAX ABW_IR_DEFAULT_STRENGTH_MAX
+
+// Advanced direction method:
+//   IRRing::DIRECTION_VECTOR_SUM     centroid of nearby receivers (default)
+//   IRRing::DIRECTION_INTERPOLATION  v2-style neighbour interpolation
+#define ABW_IR_DIRECTION_METHOD IRRing::DIRECTION_VECTOR_SUM
+
+// Vector sum only: receivers each side of the strongest to include
+// (1-6, 6 = whole ring).
+#define ABW_IR_VECTOR_SPAN ABW_IR_DEFAULT_VECTOR_SPAN
 
 // Print raw counts, smoothed values and outputs over USB (Serial Monitor,
 // 115200) for calibration and tuning. Set to true, upload, open the monitor.
@@ -43,6 +58,9 @@ void setup() {
     irRing.setDutyMax(ABW_IR_DUTY_MAX);
     irRing.setSmoothing(ABW_IR_SMOOTHING);
     irRing.setNoBallThreshold(ABW_IR_NO_BALL_THRESHOLD);
+    irRing.setStrengthMax(ABW_IR_STRENGTH_MAX);
+    irRing.setDirectionMethod(ABW_IR_DIRECTION_METHOD);
+    irRing.setVectorSpan(ABW_IR_VECTOR_SPAN);
     irRing.init();
     hub.setSensorRGB_I(data);
 }
@@ -52,6 +70,7 @@ void loop() {
         data[0] = irRing.getDirectionSimple();
         data[1] = irRing.getStrength();
         data[2] = irRing.getDirectionAdvanced();
+        data[3] = irRing.isBallDetected() ? 1 : 0;
 
 #if ABW_IR_DEBUG
         static uint8_t windows = 0;
@@ -75,7 +94,9 @@ void loop() {
             Serial.print("  str ");
             Serial.print(data[1]);
             Serial.print("  angle ");
-            Serial.println(data[2]);
+            Serial.print(data[2]);
+            Serial.print("  ball ");
+            Serial.println(data[3]);
         }
 #endif
     }

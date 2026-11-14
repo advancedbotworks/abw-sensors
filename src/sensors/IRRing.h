@@ -39,7 +39,12 @@
  * 3. update() (called from loop) turns each count into a 0-100 strength,
  *    normalised by the measured duty ceiling, and smooths it with an
  *    exponential moving average (EMA).
- * 4. Direction and strength are calculated from the smoothed values.
+ * 4. Outputs are calculated from the smoothed values:
+ *    - strength: average of the strongest receiver and its two neighbours
+ *      (doesn't dip when the ball sits between two receivers)
+ *    - advanced direction: vector sum (centroid) of the strongest receiver
+ *      and ABW_IR_DEFAULT_VECTOR_SPAN neighbours each side, or the older
+ *      neighbour interpolation (setDirectionMethod)
  *
  * Ball: RoboCup Junior IR golf ball (github.com/robocup-junior/ir-golf-ball)
  *   carrier 40 kHz, 8 pulses per burst, burst rate 1.2 kHz
@@ -66,8 +71,14 @@
 #define ABW_IR_DEFAULT_DUTY_MAX 0.24f
 // EMA factor (0 < alpha <= 1). 0.4 at 100 Hz ~ 20 ms time constant.
 #define ABW_IR_DEFAULT_SMOOTHING 0.4f
-// Below this smoothed strength (0-100) the ball counts as "not detected".
+// Below this strength (0-100) the ball counts as "not detected".
 #define ABW_IR_DEFAULT_NO_BALL_THRESHOLD 3.0f
+// Strength scaling: the 3-receiver average that should read as 100
+// (calibrate with the ball point-blank; 100 = no scaling).
+#define ABW_IR_DEFAULT_STRENGTH_MAX 100.0f
+// Vector-sum direction: receivers each side of the strongest to include
+// (1-6; 6 = whole ring). Limiting it ignores far-side reflections/noise.
+#define ABW_IR_DEFAULT_VECTOR_SPAN 2
 
 // ---- Output values ----
 #define ABW_IR_NO_BALL_DIRECTION 0     // simple direction when no ball
@@ -76,6 +87,11 @@
 
 class IRRing {
 public:
+    enum DirectionMethod {
+        DIRECTION_VECTOR_SUM,     // centroid of nearby receivers (default)
+        DIRECTION_INTERPOLATION   // v2-style neighbour interpolation
+    };
+
     IRRing() {}
 
     // Configure the pins and start the sampling timer. Call once in setup().
@@ -87,7 +103,7 @@ public:
 
     // ---- Outputs ----
     uint8_t  getDirectionSimple();    // 1-12, or 0 when no ball
-    uint8_t  getStrength();           // 0-100
+    uint8_t  getStrength();           // 0-100, average of strongest + 2 neighbours
     uint16_t getDirectionAdvanced();  // 0-359 degrees, or 450 when no ball
     bool     isBallDetected();
 
@@ -95,6 +111,9 @@ public:
     void setDutyMax(float dutyMax);           // calibration, see ABW_IR_DEFAULT_DUTY_MAX
     void setSmoothing(float alpha);           // 0 < alpha <= 1 (1 = off)
     void setNoBallThreshold(float strength);  // 0-100
+    void setStrengthMax(float average);       // calibration, see ABW_IR_DEFAULT_STRENGTH_MAX
+    void setDirectionMethod(DirectionMethod method);
+    void setVectorSpan(uint8_t span);         // 1-6
 
     // ---- Diagnostics (calibration / debugging) ----
     uint16_t getRawCount(uint8_t sensor);     // low samples in the last window (0-500)
@@ -107,10 +126,15 @@ public:
 
 private:
     void calculateOutputs();
+    float directionVectorSum(uint8_t best);
+    float directionInterpolation(uint8_t best, float bestValue);
 
     float m_dutyMax = ABW_IR_DEFAULT_DUTY_MAX;
     float m_alpha = ABW_IR_DEFAULT_SMOOTHING;
     float m_noBallThreshold = ABW_IR_DEFAULT_NO_BALL_THRESHOLD;
+    float m_strengthMax = ABW_IR_DEFAULT_STRENGTH_MAX;
+    DirectionMethod m_directionMethod = DIRECTION_VECTOR_SUM;
+    uint8_t m_vectorSpan = ABW_IR_DEFAULT_VECTOR_SPAN;
 
     uint16_t m_rawCounts[ABW_IR_SENSOR_COUNT] = {0};
     float m_smoothed[ABW_IR_SENSOR_COUNT] = {0};
