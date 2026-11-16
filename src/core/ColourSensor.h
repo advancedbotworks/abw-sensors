@@ -89,8 +89,8 @@
  *      Values in the array are the brightness of each light.
  *      (supposed to be transmitted via the Power Functions RC Protocol).
  * @param m_sensorRGB_I Raw values of Red Green Blue channels.
- *      It should be an array of uint16_t size 4.
- *      TODO: We use an array of size 3 (4th channel is unknown).
+ *      It must be an array of uint16_t size 4 (R, G, B, intensity); all 4
+ *      values are sent in mode 5.
  *      Continuous values 0..1023.
  * @param m_sensorHSV Raw values of Hue, Saturation, Value/Brightness channels.
  *      Continuous values 0..1023.

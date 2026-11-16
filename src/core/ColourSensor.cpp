@@ -86,8 +86,8 @@ ColourSensor::~ColourSensor() {
 
 /**
  * @brief Setter for m_sensorRGB; Raw values of Red Green Blue channels.
- * @param pData Expected value pointed is an array of uint16_t size 4.
- *      TODO: We use an array of size 3 (4th channel is unknown).
+ * @param pData Expected value pointed is an array of uint16_t size 4:
+ *      R, G, B and the 4th "intensity" value. All 4 are sent in mode 5.
  *      Continuous values 0..1023.
  */
 void ColourSensor::setSensorRGB_I(uint16_t *pData) {
@@ -516,9 +516,9 @@ void ColourSensor::sensorAmbientLight() {
 
 
 /**
- * @brief Mode 5 response (read): Send RGB array.
- * @warning The message should be size 6, but for constraints reasons due to masks,
- *      we must stick to a size of 10 bytes.
+ * @brief Mode 5 response (read): Send the 4 RGB_I values (R, G, B, intensity).
+ *      Payload is 4 x uint16_t (8 bytes); with header and checksum the
+ *      message is 10 bytes.
  */
 void ColourSensor::sensorRGB_IMode() {
     // Mode 5
@@ -529,8 +529,8 @@ void ColourSensor::sensorRGB_IMode() {
     m_txBuf[4] = (this->m_sensorRGB_I[1] >> 8) & 0xFF;
     m_txBuf[5] = this->m_sensorRGB_I[2] & 0xFF; // Send LSB of blue value
     m_txBuf[6] = (this->m_sensorRGB_I[2] >> 8) & 0xFF;
-    m_txBuf[7] = 0; // Unknown channel
-    m_txBuf[8] = 0; // Unknown channel
+    m_txBuf[7] = this->m_sensorRGB_I[3] & 0xFF; // Send LSB of the 4th (intensity) value
+    m_txBuf[8] = (this->m_sensorRGB_I[3] >> 8) & 0xFF;
     sendUARTBuffer(8);
 }
 
